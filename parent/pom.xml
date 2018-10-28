@@ -41,7 +41,7 @@
 
       <dependency>
         <groupId>org.autopipes</groupId>
-        <artifactId>autopipes</artifactId>
+        <artifactId>core</artifactId>
         <version>${project.version}</version>
       </dependency>
 

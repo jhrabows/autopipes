@@ -7,7 +7,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>autopipes</artifactId>
+  <artifactId>core</artifactId>
   <packaging>jar</packaging>
   
  <build>
