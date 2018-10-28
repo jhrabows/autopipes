@@ -1,0 +1,33 @@
+<dwg:dwg-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-name xmlns="http://dwg.autopipes.org">Test</dwg-name>
+	<dwg-text-size xmlns="http://dwg.autopipes.org">7.5</dwg-text-size>
+	<dwg-update-date xmlns="http://dwg.autopipes.org">2012-03-22T09:21:01
+	</dwg-update-date>
+	<options-root xmlns="http://dwg.autopipes.org">
+		<layers-root>
+			<layer name="0" type="Output" />
+			<layer name="SPRK-PIPEMN" type="Main" sub-type="weldedGroove"
+				main-diameter="D2" vendor="VIC" />
+			<layer name="SPRK-PIPEBL" type="Branch">
+				<headcount>
+					<entry xmlns="">
+						<key>1</key>
+						<value>D1</value>
+					</entry>
+					<entry xmlns="">
+						<key>2</key>
+						<value>D1</value>
+					</entry>
+					<entry xmlns="">
+						<key>3</key>
+						<value>D15</value>
+					</entry>
+				</headcount>
+			</layer>
+			<layer name="SPRK-GROOVED" type="Main" sub-type="grooved"
+				vendor="VIC" main-diameter="D2" />
+		</layers-root>
+		<error-color>Magenta</error-color>
+	</options-root>
+	<dwg-id xmlns="http://dwg.autopipes.org">181</dwg-id>
+</dwg:dwg-root>

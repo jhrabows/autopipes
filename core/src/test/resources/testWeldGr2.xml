@@ -1,0 +1,194 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-id xmlns="http://dwg.autopipes.org">181</dwg-id>
+	<area-body xmlns="http://dwg.autopipes.org">
+		<dwg-entity cls="AcDbPoint" id="689" ly="SPRK-PIPEMN">
+			<ent-start x="3933.27083915372" y="-1246.37087634192" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="690" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000014" />
+			<ent-start x="4730.93166940853" y="-1793.68988353963" />
+			<ent-ang alpha="2.92806423623773" beta="0.213528417352064" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="692"
+			ly="SPRK-HD-UNDER-DUCT" name="SPRK-HD-UNDER-DUCT">
+			<ent-start x="4724.93166940853" y="-1800.68988353963" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="693" ly="sprk-hd-sw"
+			name="sprk-hd-sw">
+			<ent-start x="4724.93166940861" y="-670.058376341978" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="694" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000059" />
+			<ent-start x="4724.93166940852" y="-1224.62087634195" />
+			<ent-ang alpha="1.35726790944283" beta="4.92591739773675" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="695" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000059" />
+			<ent-start x="4724.93166940853" y="-1126.12087634195" />
+			<ent-ang alpha="1.35726790944283" beta="4.92591739773675" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="699" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000014" />
+			<ent-start x="4715.93166940853" y="-667.058376341978" />
+			<ent-ang alpha="6.06965688982752" beta="3.35512107094186" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="700" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940861" y="-667.058376341978" />
+			<ent-end x="4715.93166940853" y="-667.058376341978" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="701" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940861" y="-670.058376341978" />
+			<ent-end x="4724.93166940861" y="-667.058376341978" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="702" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1800.68988353963" />
+			<ent-end x="4724.93166940853" y="-1793.68988353963" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="703" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1793.68988353963" />
+			<ent-end x="4730.93166940853" y="-1793.68988353963" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="704" ly="SPRK-PIPEBL">
+			<ent-start x="4715.93166940853" y="-979.620876341951" />
+			<ent-end x="4730.93166940852" y="-979.620876341951" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="705" ly="SPRK-PIPEBL">
+			<ent-start x="4730.93166940853" y="-1021.62087634195" />
+			<ent-end x="4742.93166940853" y="-1021.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="707" ly="SPRK-PIPEBL">
+			<ent-start x="4742.93166940853" y="-1332.12087634195" />
+			<ent-end x="4742.93166940853" y="-1246.37087634192" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="708" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940852" y="-1224.62087634195" />
+			<ent-end x="4742.93166940853" y="-1224.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="709" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940854" y="-1233.62087634195" />
+			<ent-end x="4724.93166940854" y="-1224.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="710" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1126.12087634195" />
+			<ent-end x="4742.93166940853" y="-1126.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="711" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1117.12087634195" />
+			<ent-end x="4724.93166940853" y="-1126.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="712" ly="SPRK-PIPEBL">
+			<ent-start x="4730.93166940853" y="-1021.62087634195" />
+			<ent-end x="4730.93166940853" y="-979.620876341951" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="713" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-991.62087634195" />
+			<ent-end x="4730.93166940852" y="-991.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="714" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1000.62087634195" />
+			<ent-end x="4724.93166940853" y="-991.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="715" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-875.12087634195" />
+			<ent-end x="4715.93166940853" y="-875.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="716" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-884.12087634195" />
+			<ent-end x="4724.93166940853" y="-875.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="717" ly="SPRK-PIPEBL">
+			<ent-start x="4730.93166940853" y="-1332.12087634195" />
+			<ent-end x="4742.93166940853" y="-1332.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="718" ly="SPRK-PIPEBL">
+			<ent-size h="4.4999999999997" />
+			<ent-start x="4730.93166940853" y="-1350.12087634195" />
+			<ent-ang alpha="4.49886056303263" beta="1.78432474414696" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="719" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1350.12087634195" />
+			<ent-end x="4730.93166940853" y="-1350.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="720" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000014" />
+			<ent-start x="4730.93166940854" y="-1466.62087634195" />
+			<ent-ang alpha="4.49886056303263" beta="1.78432474414696" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="721" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940854" y="-1466.62087634195" />
+			<ent-end x="4730.93166940853" y="-1466.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="722" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000014" />
+			<ent-start x="4730.93166940853" y="-1583.12087634195" />
+			<ent-ang alpha="4.49886056303263" beta="1.78432474414696" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="723" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1583.12087634195" />
+			<ent-end x="4730.93166940853" y="-1583.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="724" ly="SPRK-PIPEBL">
+			<ent-size h="4.50000000000014" />
+			<ent-start x="4730.93166940853" y="-1699.62087634195" />
+			<ent-ang alpha="4.49886056303263" beta="1.78432474414696" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="725" ly="SPRK-PIPEBL">
+			<ent-start x="4724.93166940853" y="-1699.62087634195" />
+			<ent-end x="4730.93166940853" y="-1699.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="726" ly="SPRK-PIPEBL">
+			<ent-start x="4730.93166940853" y="-1793.68988353963" />
+			<ent-end x="4730.93166940853" y="-1332.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="727" ly="SPRK-PIPEBL">
+			<ent-start x="4715.93166940853" y="-979.620876341951" />
+			<ent-end x="4715.93166940853" y="-667.058376341978" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="728" ly="SPRK-PIPEMN">
+			<ent-start x="3933.27083915372" y="-1246.37087634192" />
+			<ent-end x="4782.30666940853" y="-1246.37087634192" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="729" ly="SPRK-PIPEBL">
+			<ent-start x="4742.93166940853" y="-1246.37087634192" />
+			<ent-end x="4742.93166940853" y="-1021.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbArc" id="730" ly="SPRK-PIPEBL">
+			<ent-size h="4.4999999999997" />
+			<ent-start x="4724.93166940853" y="-875.12087634195" />
+			<ent-ang alpha="4.49886056303263" beta="1.78432474414696" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="735" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1699.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="736" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1583.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="737" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1466.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="738" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1350.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="739" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1233.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="740" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1117.12087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="741" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-1000.62087634195" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="742" ly="sprk-hd-conc"
+			name="sprk-hd-conc">
+			<ent-start x="4724.93166940853" y="-884.120876341951" />
+		</dwg-entity>
+	</area-body>
+	<area-options xmlns="http://dwg.autopipes.org" />
+</dwg:area-root>

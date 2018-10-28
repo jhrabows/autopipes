@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:render-dwg xmlns:ns2="http://dwg.autopipes.org">
+    <ns2:dwg-id>1</ns2:dwg-id>
+    <ns2:area-id>1</ns2:area-id>
+    <ns2:main-diameters>true</ns2:main-diameters>
+</ns2:render-dwg>

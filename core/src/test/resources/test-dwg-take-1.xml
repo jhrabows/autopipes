@@ -1,0 +1,68 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-id xmlns="http://dwg.autopipes.org">82</dwg-id>
+	<area-body xmlns="http://dwg.autopipes.org">
+		<dwg-entity cls="AcDbCircle" id="2125914752" ly="pipemn">
+			<ent-size h="3.41116315783029"/>
+			<ent-start x="-3844.70174396349" y="2489.20517317955"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="2125914720" ly="pipemn">
+			<ent-start x="-3948.20222113144" y="2489.20517317955"/>
+			<ent-end x="-3948.20222113144" y="2505.17295874457"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbCircle" id="2125914656" ly="PIPEBL">
+			<ent-size h="2.04604540577793"/>
+			<ent-start x="-3889.27028156854" y="2459.6734141818"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="2125914648" ly="PIPEBL">
+			<ent-start x="-3889.27028156854" y="2489.20517317953"/>
+			<ent-end x="-3889.27028156854" y="2459.6734141818"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="2125914584" ly="PIPEBL" name="AREA-CONFIG">
+			<ent-start x="-3948.20222338743" y="2483.89537672581" />
+			<attributes>
+				<entry xmlns="">
+					<key>AREA-ID</key>
+					<value>1</value>
+				</entry>
+				<entry xmlns="">
+					<key>AREA-NAME</key>
+					<value>Area-1</value></entry>
+					<entry xmlns="">
+						<key>MAIN-LABEL</key>
+						<value>M</value>
+					</entry>
+					<entry xmlns="">
+						<key>MAIN-START-NO</key>
+						<value>1</value>
+					</entry>
+					<entry xmlns="">
+						<key>BRANCH-LABEL</key>
+						<value>#</value>
+					</entry>
+					<entry xmlns="">
+						<key>BRANCH-START-NO</key>
+						<value>1</value>
+					</entry></attributes></dwg-entity>
+					<dwg-entity cls="AcDbArc" id="2125914160" ly="PIPEBL">
+						<ent-size h="4.43934858195296"/>
+						<ent-start x="-3889.27028156854" y="2489.20517317953"/>
+						<ent-ang alpha="0.775397496610493" beta="2.3661951569793"/>
+					</dwg-entity>
+					<dwg-entity cls="AcDbArc" id="2125914152" ly="PIPEBL">
+						<ent-size h="4.43934858195296"/>
+						<ent-start x="-3889.27028156854" y="2489.20517317953"/>
+						<ent-ang alpha="3.91699015020029" beta="5.50778781056909" />
+					</dwg-entity>
+					<dwg-entity cls="AcDbLine" id="2125914120" ly="PIPEBL">
+						<ent-start x="-3844.70174396349" y="2489.20517317955"/>
+						<ent-end x="-3948.20222113144" y="2489.20517317955"/>
+					</dwg-entity></area-body>
+					<area-options xmlns="http://dwg.autopipes.org">
+						<main-label>M</main-label><main-start-no>1</main-start-no>
+							<branch-label>#</branch-label>
+							<branch-start-no>1</branch-start-no>
+					</area-options>
+					<area-id xmlns="http://dwg.autopipes.org">1</area-id>
+					<area-name xmlns="http://dwg.autopipes.org">Area-1</area-name>
+</dwg:area-root>
+

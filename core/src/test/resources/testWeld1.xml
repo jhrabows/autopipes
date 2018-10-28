@@ -1,0 +1,33 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-id xmlns="http://dwg.autopipes.org">161</dwg-id>
+	<area-body xmlns="http://dwg.autopipes.org">
+		<dwg-entity cls="AcDbPoint" id="116" ly="SPRK-CUTS">
+			<ent-start x="972.585382632868" y="890.734692989991" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbPoint" id="117" ly="SPRK-CUTS">
+			<ent-start x="857.558925917168" y="910.635252809353" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbCircle" id="118" ly="SPRK-REF-HDS">
+			<ent-size h="6.11259586785542" />
+			<ent-start x="931.276306216219" y="939.67474249157" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="119" ly="sprk-pbl">
+			<ent-start x="931.276306216219" y="939.674742491569" />
+			<ent-end x="931.276306216219" y="910.635252809353" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="120" ly="SPRK-PMN-SCH40-WELDO">
+			<ent-start x="972.585382632868" y="910.635252809353" />
+			<ent-end x="857.558925917168" y="910.635252809353" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="121" ly="SPRK-PMN-SCH40-WELDO">
+			<ent-start x="1155.734375" y="910.635252809357" />
+			<ent-end x="972.585382632868" y="910.635252809353" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="122" ly="SPRK-PMN-SCH40-WELDO">
+			<ent-start x="972.585382632868" y="890.734692989991" />
+			<ent-end x="972.585382632868" y="910.635252809353" />
+		</dwg-entity>
+	</area-body>
+	<area-options xmlns="http://dwg.autopipes.org" />
+</dwg:area-root>
+

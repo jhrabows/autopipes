@@ -1,0 +1,20 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+<dwg-id xmlns="http://dwg.autopipes.org">121</dwg-id>
+<area-body xmlns="http://dwg.autopipes.org">
+	<dwg-entity cls="AcDbBlockReference" id="55" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="-32140.205842204" y="-1772.14131806683"/></dwg-entity>
+	<dwg-entity cls="AcDbBlockReference" id="56" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="-32175.4966789208" y="-1772.14131806683"/></dwg-entity>
+	<dwg-entity cls="AcDbPoint" id="57" ly="sprk pipebl"><ent-start x="-32209.8997214667" y="-1736.83104921727"/></dwg-entity>
+	<dwg-entity cls="AcDbLine" id="58" ly="sprk pipebl"><ent-start x="-32108.2037721781" y="-1772.14131806683"/><ent-end x="-32209.8997214667" y="-1772.14131806683"/></dwg-entity>
+	<dwg-entity cls="AcDbLine" id="59" ly="sprk pipebl"><ent-start x="-32108.2037721781" y="-1756.22763937972"/><ent-end x="-32108.2037721781" y="-1772.14131806683"/></dwg-entity>
+	<dwg-entity cls="AcDbLine" id="60" ly="sprk pipebl"><ent-start x="-32228.2037721781" y="-1772.14131806683"/><ent-end x="-32209.8997214667" y="-1772.14131806683"/></dwg-entity>
+	<dwg-entity cls="AcDbLine" id="61" ly="SPRK-PMN-2GR-SCH10"><ent-start x="-32209.8997214667" y="-1871.83104921727"/><ent-end x="-32209.8997214667" y="-1736.83104921727"/></dwg-entity>
+	<dwg-entity cls="AcDbLine" id="62" ly="SPRK-PMN-2GR-SCH10"><ent-start x="-32241.2907918493" y="-1871.83104921727"/><ent-end x="-32209.8997214667" y="-1871.83104921727"/></dwg-entity>
+	<dwg-entity cls="AcDbBlockReference" id="63" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="-32108.2037721781" y="-1756.22763937972"/></dwg-entity>
+	<dwg-entity cls="AcDbBlockReference" id="64" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="-32228.2037721781" y="-1772.14131806683"/></dwg-entity>
+</area-body>
+<area-options xmlns="http://dwg.autopipes.org">
+	<main-label>M-</main-label><main-start-no>1</main-start-no><branch-label>#</branch-label><branch-start-no>1</branch-start-no><ignore-shorter-than>1'</ignore-shorter-than><cut-longer-than>10'6"</cut-longer-than><cut-branch-into>7'</cut-branch-into><cut-main-into>10'6" 10' 9'</cut-main-into><main-cut-clearance>6"</main-cut-clearance>
+</area-options>
+</dwg:area-root>
+
+

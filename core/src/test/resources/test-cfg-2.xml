@@ -1,0 +1,31 @@
+<dwg:dwg-root xmlns:dwg="http://dwg.autopipes.org">
+      <dwg-name xmlns="http://dwg.autopipes.org">Simple1</dwg-name>
+      <dwg-text-size xmlns="http://dwg.autopipes.org">0</dwg-text-size>
+      <dwg-update-date xmlns="http://dwg.autopipes.org">2008-01-01T18:43:19</dwg-update-date>
+      <options-root xmlns="http://dwg.autopipes.org">
+        <layers-root xmlns="http://dwg.autopipes.org">
+          <layer name="Main" type="Main" sub-type="grooved" vendor="VIC" main-diameter="D2" hole-diameter="D1"/>
+          <layer name="Branches" type="Branch" >
+            <headcount>
+              <entry xmlns=""><key>1</key><value>D1</value></entry>
+            </headcount>
+          </layer>
+        </layers-root>      
+        <branch-prefix>#</branch-prefix>
+        <branch-count-start>1</branch-count-start>
+        <main-prefix>M-</main-prefix>
+        <main-count-start>1</main-count-start>
+        <error-color>Magenta</error-color>
+        <main-cut-list>
+          <main-cut>126</main-cut><main-cut>120</main-cut><main-cut>108</main-cut><main-cut>96</main-cut>
+        </main-cut-list>
+        <linear-delta>0.1</linear-delta>
+        <angular-delta>0.01</angular-delta>
+        <short-pipe>12</short-pipe>
+        <long-pipe>126</long-pipe>
+        <branch-cut-list>
+          <branch-cut>84</branch-cut>
+        </branch-cut-list>
+        <main-cut-space>6</main-cut-space>
+      </options-root>      
+</dwg:dwg-root>

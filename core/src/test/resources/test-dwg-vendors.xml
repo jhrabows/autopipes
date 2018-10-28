@@ -1,0 +1,15 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+  <dwg-id xmlns="http://dwg.autopipes.org">23</dwg-id>
+  <area-body xmlns="http://dwg.autopipes.org">
+    <dwg-entity cls="AcDbPoint" id="2127965368" ly="SPRK-HD-UP"><ent-start x="1427.29852998378" y="-2477.13778585229"/></dwg-entity>
+    <dwg-entity cls="AcDbPoint" id="2127965360" ly="SPRK-HD-UP"><ent-start x="891.132243506067" y="-2247.12948161475"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2127965352" ly="SPRK-PIPE-4GR-VIC"><ent-start x="891.132243506067" y="-2477.13778585229"/><ent-end x="891.132243506067" y="-2608.13739514936"/></dwg-entity>
+    <dwg-entity cls="AcDbArc" id="2127965344" ly="SPRK-PIPE-3GR-FL"><ent-size h="3"/><ent-start x="891.132243506067" y="-2477.13778585229"/><ent-ang alpha="2.01792429732902" beta="4.26526100985057"/></dwg-entity>
+    <dwg-entity cls="AcDbArc" id="2127965336" ly="SPRK-PIPE-3GR-FL"><ent-size h="3"/><ent-start x="891.132243506067" y="-2477.13778585229"/><ent-ang alpha="5.11566464919574" beta="1.16752065798385"/></dwg-entity>
+    <dwg-entity cls="AcDbArc" id="2127965328" ly="SPRK-PIPE-3GR-FL"><ent-size h="2.9104514230387"/><ent-start x="891.132243506067" y="-2460.2983463295"/><ent-ang alpha="2.72921415229113" beta="0.41237850129866"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2127965320" ly="SPRK-PIPE-4GR-FL"><ent-start x="1427.29852998378" y="-2477.13778585229"/><ent-end x="891.132243506067" y="-2477.13778585229"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2127965312" ly="SPRK-PIPE-3GR-FL"><ent-start x="891.132243506067" y="-2247.12948161475"/><ent-end x="891.132243506067" y="-2477.13778585229"/></dwg-entity>
+  </area-body>
+  <area-options xmlns="http://dwg.autopipes.org"/>
+</dwg:area-root>
+

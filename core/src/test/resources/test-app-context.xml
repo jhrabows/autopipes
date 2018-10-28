@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="renTest2" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-render-2.xml"/>
+  </bean>
+  <bean id="renTest1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-render-1.xml"/>
+  </bean>
+  <bean id="cfgTest1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-1.xml"/>
+  </bean>
+  <bean id="cfgTest200" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-200.xml"/>
+  </bean>
+  <bean id="dwgTest200" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-200.xml"/>
+  </bean>
+  <bean id="cfgTest300" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-300.xml"/>
+  </bean>
+  <bean id="dwgTest300" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-300.xml"/>
+  </bean>
+  <bean id="cfgTestMatch" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-match.xml"/>
+  </bean>
+  <bean id="dwgTestMatch" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-match.xml"/>
+  </bean>
+  <bean id="dwgTestMatch2" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-match-2.xml"/>
+  </bean>
+  <bean id="dwgTestMatch3" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-match-2.xml"/>
+  </bean>
+  <bean id="dwgTestMatchReducer" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-match-reducer.xml"/>
+  </bean>
+  <bean id="dwgTestVendors" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-vendors.xml"/>
+  </bean>
+  <bean id="dwgTestMaincut" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-maincut.xml"/>
+  </bean>
+  <bean id="dwgTest1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-1.xml"/>
+  </bean>
+  <bean id="dwgTest3" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-3.xml"/>
+  </bean>
+  <bean id="dwgTestDiscon" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-disconnected.xml"/>
+  </bean>
+  <bean id="dwgTestBreak" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-breakup.xml"/>
+  </bean>
+  <bean id="dwgTestSnap" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-snap.xml"/>
+  </bean>
+  <bean id="dwgTestP" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-p.xml"/>
+  </bean>
+  <bean id="dwgTestPT" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-pt.xml"/>
+  </bean>
+  <bean id="dwgTestP2" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-p2.xml"/>
+  </bean>
+  <bean id="dwgTestErr1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-err1.xml"/>
+  </bean>
+  <bean id="dwgTestErr2" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-err2.xml"/>
+  </bean>
+  <bean id="dwgTestEll45" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-ell45.xml"/>
+  </bean>
+  <bean id="dwgTestMainEll45" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-main-ell45.xml"/>
+  </bean>
+  <bean id="dwgTestJmp" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-jmp.xml"/>
+  </bean>
+  <bean id="dwgTestLongBr" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-long_br.xml"/>
+  </bean>
+  <bean id="dwgTestLab" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-lab.xml"/>
+  </bean>
+  <bean id="dwgTestLongM" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-long_m.xml"/>
+  </bean>
+  <bean id="dwgTestSimpleM" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-main-simple.xml"/>
+  </bean>
+  <bean id="cfgTestTwin" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-twin.xml"/>
+  </bean>
+  <bean id="dwgTestTwin" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-twin.xml"/>
+  </bean>
+  <bean id="cfgTestZ1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-z1.xml"/>
+  </bean>
+  <bean id="dwgTestZ1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-z1.xml"/>
+  </bean>
+
+  <bean id="cfgTestTake1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-take-1.xml"/>
+  </bean>
+  <bean id="dwgTestTake1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-take-1.xml"/>
+  </bean>
+
+  <bean id="cfgTestCross" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-cross.xml"/>
+  </bean>
+  <bean id="dwgTestCross" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-cross.xml"/>
+  </bean>
+
+  <bean id="cfgTestMainTakeout" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="cfg-main-takeout.xml"/>
+  </bean>
+  <bean id="dwgTestMainTakeout" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="dwg-main-takeout.xml"/>
+  </bean>
+
+  <bean id="dwgTestBlock" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-blk.xml"/>
+  </bean>
+<!-- Storage Service (Creates schema if necessary) -->
+  <bean id="storageService" class="org.autopipes.service.JdbcStorageService" init-method="init">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="schema" value="${jdbc.schema}"/>
+    <property name="schemaSeparator" value="${jdbc.schema.separator}"/>
+    <property name="marshaller" ref="jaxb2Marshaller"/>
+    <property name="unmarshaller" ref="jaxb2Marshaller"/>
+  </bean>
+<!--
+  <bean id="pipeConfig" class="org.autopipes.model.PipeConfig">
+    <property name="headLookup">
+      <map>
+        <entry>
+          <key><value>upright-on-sprig</value></key>
+          <ref bean="uprightOnSprigHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-up-sprig</value></key>
+          <ref bean="uprightOnSprigHead"/>
+        </entry>
+        <entry>
+          <key><value>upright</value></key>
+          <ref bean="uprightHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-up</value></key>
+          <ref bean="uprightHead"/>
+        </entry>
+        <entry>
+          <key><value>sidewall</value></key>
+          <ref bean="sidewallHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-sw</value></key>
+          <ref bean="sidewallHead"/>
+        </entry>
+        <entry>
+          <key><value>ec-sidewall</value></key>
+          <ref bean="ecSidewallHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-sw-ec</value></key>
+          <ref bean="ecSidewallHead"/>
+        </entry>
+        <entry>
+          <key><value>pendent</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-pendent</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>dry-pendent</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-dry-pndnt</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>recess-pendent</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-rec-pndnt</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>concealed-pendent</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-conc</value></key>
+          <ref bean="pendentHead"/>
+        </entry>
+        <entry>
+          <key><value>head-under-duct</value></key>
+          <ref bean="otherHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-under-duct</value></key>
+          <ref bean="otherHead"/>
+        </entry>
+        <entry>
+          <key><value>head-under-duct-with-sprig</value></key>
+          <ref bean="otherOnSprigHead"/>
+        </entry>
+        <entry>
+          <key><value>sprk-hd-under-duct-sprig</value></key>
+          <ref bean="otherOnSprigHead"/>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  -->
+  <bean id="analyzerService" class="org.autopipes.service.AnalyzerService" >
+    <property name="planeGeo" ref="planeGeo"/>
+    <property name="takeout" ref="takeoutRepo"/>
+    <property name="fittingFactory" ref="fittingFactory"/>
+    <property name="pipeConfig" ref="pipeConfig"/>
+  </bean>
+ <!-- 
+  <bean id="otherHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >true</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D05</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >false</value></property>
+  </bean>
+  <bean id="otherOnSprigHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >true</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D1</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >false</value></property>
+  </bean>
+  <bean id="pendentHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >true</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D1</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >true</value></property>
+  </bean>
+  <bean id="uprightOnSprigHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >true</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D1</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >false</value></property>
+  </bean>
+  <bean id="uprightHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >true</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D05</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >false</value></property>
+  </bean>
+  <bean id="sidewallHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >false</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D05</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >true</value></property>
+  </bean>
+  <bean id="ecSidewallHead" class="org.autopipes.model.Pipe">
+      <constructor-arg><value type="org.autopipes.model.DrawingLayer$Designation">Head</value></constructor-arg>
+      <property name="vertical"><value type="java.lang.Boolean" >false</value></property>
+      <property name="diameter"><value type="org.autopipes.takeout.Diameter" >D075</value></property>
+      <property name="ignored"><value type="java.lang.Boolean" >true</value></property>
+  </bean>
+-->  
+  <bean id="planeGeo" class="org.autopipes.util.PlaneGeo">
+     <property name="linearTolerance"><value type="java.lang.Double">0.25</value></property>
+     <property name="angularTolerance"><value type="java.lang.Double">0.05</value></property>
+     <property name="pointClass"><value type="java.lang.Class">org.autopipes.model.DwgPoint</value></property>
+  </bean>
+
+  <bean id="takeoutRepo" factory-bean="sampleGenerator" factory-method="read" init-method="initLookup">
+    <constructor-arg value="takeoutrepo.xml"/>
+  </bean>
+
+  <bean id="fittingFactory" class="org.autopipes.takeout.Fitting$Factory" >
+    <property name="takeout" ref="takeoutRepo"/>
+  </bean>
+
+  <bean id="reportingService" class="org.autopipes.service.ReportingService" >
+  	<!--
+      <property name="textSideShift"><value type="java.lang.Integer">10</value></property>
+      <property name="textVerticalUpShift1"><value type="java.lang.Integer">3</value></property>
+      <property name="textVerticalDownShift1"><value type="java.lang.Integer">-11</value></property>
+      <property name="textVerticalDownShift2"><value type="java.lang.Integer">-2</value></property>
+      <property name="textVerticalUpShift2_5"><value type="java.lang.Integer">8</value></property>
+      <property name="textVerticalUpShift2_7"><value type="java.lang.Integer">11</value></property>
+      <property name="textWidth"><value type="java.lang.Integer">150</value></property>
+      <property name="jumpTextShift"><value type="java.lang.Integer">30</value></property>
+      <property name="jumpTextDirection"><value type="java.lang.Double">0.33</value></property>
+      <property name="errorTilt"><value type="java.lang.Double">0.1</value></property>
+ -->
+      <property name="pipeConfig" ref="pipeConfig"/>
+      <property name="planeGeo" ref="planeGeo"/>
+  </bean>
+  
+<!-- Factory for test drawings -->
+  <bean id="sampleGenerator" class="org.autopipes.util.OxmResourceReader">
+    <constructor-arg ref="jaxb2Marshaller"/>
+    <constructor-arg ref="jaxb2Marshaller"/>
+  </bean>
+
+  <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list>
+                <value>org.autopipes.takeout.TakeoutRepository</value>
+                <value>org.autopipes.model.FloorDrawing</value>
+                <value>org.autopipes.model.DrawingLayer</value>
+                <value>org.autopipes.model.DrawingOptions</value>
+                <value>org.autopipes.model.DrawingArea</value>
+                <value>org.autopipes.model.AreaBody</value>
+                <value>org.autopipes.model.RenderDwg</value>
+            </list>
+        </property>
+        <property name="marshallerProperties">
+            <map>
+                <entry key = "jaxb.formatted.output">
+                    <value type="java.lang.Boolean">true</value>
+                </entry>
+            </map>
+        </property>
+  </bean>
+  
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+    <property name="url" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+  </bean>
+
+<!-- Connectivity and location of Schema DDL file -->
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="jdbc.properties"/>
+  </bean>
+   
+</beans>

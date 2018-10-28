@@ -1,0 +1,26 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-id xmlns="http://dwg.autopipes.org">181</dwg-id>
+	<area-body xmlns="http://dwg.autopipes.org">
+		<dwg-entity cls="AcDbCircle" id="382" ly="SPRK-PIPEMN">
+			<ent-size h="45.3725690108167" />
+			<ent-start x="8153.78490982725" y="1138.26894834386" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbCircle" id="383" ly="SPRK-PIPEMN">
+			<ent-size h="47.5461590150499" />
+			<ent-start x="8153.78490982725" y="427.268948343861" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="384" ly="SPRK-PIPEMN">
+			<ent-start x="8153.78490982725" y="427.268948343861" />
+			<ent-end x="8153.78490982725" y="1138.26894834386" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="385" ly="SPRK-PIPEMN">
+			<ent-start x="8033.78490982725" y="859.268948343861" />
+			<ent-end x="8153.78490982725" y="859.268948343861" />
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="386" ly="SPRK-PIPEMN">
+			<ent-start x="8033.78490982725" y="847.268948343861" />
+			<ent-end x="8033.78490982725" y="859.268948343861" />
+		</dwg-entity>
+	</area-body>
+	<area-options xmlns="http://dwg.autopipes.org" />
+</dwg:area-root>

@@ -1,0 +1,190 @@
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+<!-- test XMLs -->
+
+<!-- Old -->
+  <bean id="cfgTest200" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-200.xml"/>
+  </bean>
+  <bean id="dwgTest200" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-200.xml"/>
+  </bean>
+  
+  <bean id="thr2Cfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-th2.xml"/>
+  </bean>
+  <bean id="thr2Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-th2.xml"/>
+  </bean>
+  
+  <bean id="testWeldCross2Cfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldCross2Cfg.xml"/>
+  </bean>
+  
+  <bean id="testWeldCross2" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldCross2.xml"/>
+  </bean>
+  
+  <bean id="testWeldCrossCfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldCrossCfg.xml"/>
+  </bean>
+  
+  <bean id="testWeldCross" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldCross.xml"/>
+  </bean>
+
+  <bean id="testWeldSameCfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldSameCfg.xml"/>
+  </bean>
+  
+  <bean id="testWeldSame" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldSame.xml"/>
+  </bean>
+
+
+<!-- TestDwg -->
+  <bean id="testDwgCfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testDwgCfg.xml"/>
+  </bean>
+  <bean id="testDwgA1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testDwgA1.xml"/>
+  </bean>
+
+  <bean id="errDwgCfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="errDwgCfg.xml"/>
+  </bean>
+  <bean id="errDwgA1" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="errDwgA1.xml"/>
+  </bean>
+
+<!-- Weld1Dwg -->
+  <bean id="weld1Cfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld1Cfg.xml"/>
+  </bean>
+  <bean id="weld1Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld1.xml"/>
+  </bean>
+  <bean id="weld2Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld2.xml"/>
+  </bean>
+  <bean id="weld3Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld3.xml"/>
+  </bean>
+  <bean id="weld4Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld4.xml"/>
+  </bean>
+  <bean id="weld5Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld5.xml"/>
+  </bean>
+  <bean id="weld6Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld6.xml"/>
+  </bean>
+  
+  <!-- WeldGrDwg -->
+  <bean id="weldGrCfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldGrCfg.xml"/>
+  </bean>
+  
+  <bean id="groovedCfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testGroovedCfg.xml"/>
+  </bean>
+   
+  <bean id="weldGr1Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldGr1.xml"/>
+  </bean>
+  <bean id="weldGr2Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeldGr2.xml"/>
+  </bean>
+  
+  
+ <bean id="weld7Cfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld7Cfg.xml"/>
+  </bean>
+  <bean id="weld7Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="testWeld7.xml"/>
+  </bean>
+  
+ <bean id="cell3Cfg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-cfg-cell-3.xml"/>
+  </bean>
+  <bean id="cell3Dwg" factory-bean="sampleGenerator" factory-method="read">
+    <constructor-arg value="test-dwg-cell-3.xml"/>
+  </bean>
+
+    
+<!-- Service configuration and dependencies -->
+
+  <bean id="analyzerService" class="org.autopipes.service.AnalyzerService" >
+    <property name="planeGeo" ref="planeGeo"/>
+    <property name="takeout" ref="takeoutRepo"/>
+    <property name="fittingFactory" ref="fittingFactory"/>
+    <property name="pipeConfig" ref="pipeConfig"/>
+  </bean>
+
+  <!-- "pipeConfig" is an external reference and requires WEB-INF in classpath -->
+  <bean id="reportingService" class="org.autopipes.service.ReportingService" >
+      <property name="pipeConfig" ref="pipeConfig"/>
+      <property name="planeGeo" ref="planeGeo"/>
+  </bean>
+  
+  <bean id="fittingFactory" class="org.autopipes.takeout.Fitting$Factory" >
+    <property name="takeout" ref="takeoutRepo"/>
+  </bean>
+
+<!-- For takeoutrepo.xml assumes that WEB-INF is in classpath -->
+  <bean id="takeoutRepo" factory-bean="sampleGenerator" factory-method="read" init-method="initLookup">
+    <constructor-arg value="takeoutrepo.xml"/>
+  </bean>
+
+  <bean id="planeGeo" class="org.autopipes.util.PlaneGeo">
+     <property name="linearTolerance"><value type="java.lang.Double">0.25</value></property>
+     <property name="angularTolerance"><value type="java.lang.Double">0.05</value></property>
+     <property name="pointClass"><value type="java.lang.Class">org.autopipes.model.DwgPoint</value></property>
+  </bean>
+
+<!-- Factory to create test drawings from xml files -->
+  <bean id="sampleGenerator" class="org.autopipes.util.OxmResourceReader">
+    <constructor-arg ref="jaxb2Marshaller"/>
+    <constructor-arg ref="jaxb2Marshaller"/>
+  </bean>
+      
+    <!-- Jaxb -->
+  <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list>
+                <value>org.autopipes.takeout.TakeoutRepository</value>
+                <value>org.autopipes.model.FloorDrawing</value>
+                <value>org.autopipes.model.DrawingLayer</value>
+                <value>org.autopipes.model.DrawingOptions</value>
+                <value>org.autopipes.model.DrawingArea</value>
+                <value>org.autopipes.model.AreaBody</value>
+                <value>org.autopipes.model.RenderDwg</value>
+            </list>
+        </property>
+        <property name="marshallerProperties">
+            <map>
+                <entry key = "jaxb.formatted.output">
+                    <value type="java.lang.Boolean">true</value>
+                </entry>
+            </map>
+        </property>
+  </bean>
+  
+<!-- Persistance source - requires jdbc driver jar -->
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+    <property name="url" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+  </bean>
+    
+<!-- Connectivity and location of Schema DDL file (exposed here with ${} syntax) -->
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="jdbc.properties"/>
+  </bean>
+
+</beans>

@@ -1,0 +1,25 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+  <dwg-id xmlns="http://dwg.autopipes.org">281</dwg-id>
+  <area-body xmlns="http://dwg.autopipes.org">
+    <dwg-entity cls="AcDbBlockReference" id="2129982072" ly="BL" name="headDirect"><ent-start x="-640.938602693834" y="4.73705515774554"/></dwg-entity>
+    <dwg-entity cls="AcDbBlockReference" id="2129981992" ly="BL" name="head"><ent-start x="-604.200282151425" y="4.73705568580544"/></dwg-entity>
+    <dwg-entity cls="AcDbBlockReference" id="2129981768" ly="BL" name="sidewall"><ent-start x="-568.266174559688" y="4.73705568580544"/></dwg-entity>
+    <dwg-entity cls="AcDbBlockReference" id="2129981608" ly="BL" name="bigSidewall"><ent-start x="-534.601587385052" y="4.73705568580544"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2129981512" ly="BL">
+      <ent-start x="-534.601587385052" y="-22.4906428890022"/><ent-end x="-534.601587385052" y="4.73705568580544"/>
+    </dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2129981464" ly="BL">
+      <ent-start x="-568.266174559688" y="-22.4906428890022"/><ent-end x="-568.266174559688" y="4.73705568580544"/>
+    </dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130063272" ly="BL">
+      <ent-start x="-604.200282151425" y="-22.4906428890022"/><ent-end x="-604.200282151425" y="4.73705568580544"/>
+    </dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130063216" ly="BL">
+      <ent-start x="-640.938602693834" y="-22.4906434170621"/><ent-end x="-640.938602693834" y="4.73705515774554"/>
+    </dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130063160" ly="ML">
+      <ent-start x="-640.938602693834" y="-22.4906434170621"/><ent-end x="-428.275057485305" y="-22.4906434170621"/>
+    </dwg-entity>
+  </area-body>
+  <area-options xmlns="http://dwg.autopipes.org"/>
+</dwg:area-root>

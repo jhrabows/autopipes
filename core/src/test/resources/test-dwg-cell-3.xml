@@ -1,0 +1,25 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org"><dwg-id xmlns="http://dwg.autopipes.org">121</dwg-id>
+<area-body xmlns="http://dwg.autopipes.org">
+<dwg-entity cls="AcDbBlockReference" id="90" ly="TEXT" name="AREA-CONFIG"><ent-start x="-32931.6127918447" y="-1688.81873445753"/>
+<attributes>
+<entry xmlns=""><key>AREA-ID</key><value>3</value></entry><entry xmlns=""><key>AREA-NAME</key><value>Area-3</value></entry><entry xmlns=""><key>MAIN-LABEL</key><value>M-</value></entry><entry xmlns=""><key>MAIN-START-NO</key><value>1</value></entry><entry xmlns=""><key>BRANCH-LABEL</key><value>#</value></entry><entry xmlns=""><key>BRANCH-START-NO</key><value>1</value></entry><entry xmlns=""><key>IGNORE-SHORTER-THAN</key><value>1'</value></entry><entry xmlns=""><key>CUT-LONGER-THAN</key><value>10'6"</value></entry><entry xmlns=""><key>CUT-BRANCH-INTO</key><value>7'</value></entry><entry xmlns=""><key>CUT-MAIN-INTO</key><value>10'6" 10' 9'</value></entry><entry xmlns=""><key>MAIN-CUT-CLEARANCE</key><value>6"</value></entry>
+</attributes>
+</dwg-entity>
+<dwg-entity cls="AcDbPoint" id="46" ly="TEXT"><ent-start x="-33668.5032229814" y="-1698.41873213898"/></dwg-entity>
+<dwg-entity cls="AcDbCircle" id="47" ly="TEXT"><ent-size h="27.7874422501249"/><ent-start x="-33364.3345122922" y="-1592.37500401744"/></dwg-entity>
+<dwg-entity cls="AcDbArc" id="48" ly="sprk pipebl">
+<ent-size h="3.79508457682132"/><ent-start x="-33364.3345122922" y="-1698.41873213898"/>
+<ent-ang alpha="0.412753129532488" beta="2.72883952405731"/></dwg-entity>
+<dwg-entity cls="AcDbArc" id="49" ly="sprk pipebl">
+<ent-size h="3.79508457682132"/><ent-start x="-33364.3345122922" y="-1698.41873213898"/>
+<ent-ang alpha="3.59413208461192" beta="5.83064587615746"/>
+</dwg-entity>
+<dwg-entity cls="AcDbLine" id="50" ly="sprk pipebl"><ent-start x="-33364.3345122922" y="-1592.37500401744"/><ent-end x="-33364.3345122922" y="-1698.41873213898"/>
+</dwg-entity>
+<dwg-entity cls="AcDbLine" id="51" ly="SPRK-PMN-2GR-SCH10"><ent-start x="-33668.5032229814" y="-1698.41873213898"/><ent-end x="-32931.6127912339" y="-1698.41873213898"/>
+</dwg-entity>
+</area-body>
+<area-options xmlns="http://dwg.autopipes.org"><main-label>M-</main-label><main-start-no>1</main-start-no><branch-label>#</branch-label><branch-start-no>1</branch-start-no><ignore-shorter-than>1'</ignore-shorter-than><cut-longer-than>10'6"</cut-longer-than><cut-branch-into>7'</cut-branch-into><cut-main-into>10'6" 10' 9'</cut-main-into><main-cut-clearance>6"</main-cut-clearance></area-options>
+<area-id xmlns="http://dwg.autopipes.org">3</area-id><area-name xmlns="http://dwg.autopipes.org">Area-3</area-name>
+</dwg:area-root>
+

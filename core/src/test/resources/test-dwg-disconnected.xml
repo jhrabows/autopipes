@@ -1,0 +1,10 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+  <dwg-id xmlns="http://dwg.autopipes.org">163</dwg-id>
+  <area-options  xmlns="http://dwg.autopipes.org"/>
+  <area-id xmlns="http://dwg.autopipes.org">1</area-id>
+  <area-name xmlns="http://dwg.autopipes.org">Area-1</area-name>
+  <area-body xmlns="http://dwg.autopipes.org">
+    <dwg-entity cls="AcDbLine" ly="ML"><ent-start x="0" y="0"/><ent-end x="1" y="0"/></dwg-entity>
+    <dwg-entity cls ="AcDbLine" ly="BL"><ent-start x="2" y="0"/><ent-end x="3" y="0"/></dwg-entity>
+  </area-body>
+</dwg:area-root>

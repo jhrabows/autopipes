@@ -1,0 +1,40 @@
+<dwg:dwg-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-name xmlns="http://dwg.autopipes.org">TEST-300</dwg-name>
+	<dwg-text-size xmlns="http://dwg.autopipes.org">7.5</dwg-text-size>
+	<dwg-update-date xmlns="http://dwg.autopipes.org">2009-11-01T15:38:52</dwg-update-date>
+	<options-root xmlns="http://dwg.autopipes.org">
+		<layers-root>
+			<layer name="text" type="Output"/>
+			<layer name="PIPEMN" type="Main" sub-type="grooved" vendor="VIC" main-diameter="D2"/>
+			<layer name="PIPEBL" type="Branch">
+				<headcount>
+					<entry xmlns="">
+						<key>1</key>
+						<value>D1</value>
+					</entry>
+					<entry xmlns="">
+						<key>3</key>
+						<value>D125</value>
+					</entry>
+				</headcount>
+			</layer>
+		</layers-root>
+		<branch-prefix>#</branch-prefix>
+		<branch-count-start>1</branch-count-start>
+		<main-prefix>M-</main-prefix>
+		<main-count-start>1</main-count-start>
+		<error-color>Magenta</error-color>
+		<short-pipe>12</short-pipe>
+		<long-pipe>126</long-pipe>
+		<main-cut-space>6</main-cut-space>
+		<main-cut-list>
+			<main-cut>126</main-cut>
+			<main-cut>120</main-cut>
+			<main-cut>108</main-cut>
+			<main-cut>96</main-cut>
+		</main-cut-list>
+		<branch-cut-list>
+			<branch-cut>84</branch-cut>
+		</branch-cut-list>
+	</options-root>
+</dwg:dwg-root>

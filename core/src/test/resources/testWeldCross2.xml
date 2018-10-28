@@ -1,0 +1,31 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+<dwg-id xmlns="http://dwg.autopipes.org">121</dwg-id>
+<area-body xmlns="http://dwg.autopipes.org">
+<dwg-entity cls="AcDbBlockReference" id="80" ly="SPRK-PIPEMN" name="AREA-CONFIG">
+<ent-start x="933.160538063651" y="-2729.18853193741"/>
+<attributes><entry xmlns=""><key>AREA-ID</key><value>12</value></entry><entry xmlns=""><key>AREA-NAME</key><value>Area-12</value></entry><entry xmlns=""><key>MAIN-LABEL</key><value>M-</value></entry><entry xmlns=""><key>MAIN-START-NO</key><value>1</value></entry><entry xmlns=""><key>BRANCH-LABEL</key><value>#</value></entry><entry xmlns=""><key>BRANCH-START-NO</key><value>1</value></entry><entry xmlns=""><key>IGNORE-SHORTER-THAN</key><value>1'</value></entry><entry xmlns=""><key>CUT-LONGER-THAN</key><value>10'6"</value></entry><entry xmlns=""><key>CUT-BRANCH-INTO</key><value>7'</value></entry><entry xmlns=""><key>CUT-MAIN-INTO</key><value>10'6" 10' 9'</value></entry>
+<entry xmlns=""><key>MAIN-CUT-CLEARANCE</key><value>6"</value></entry>
+</attributes>
+</dwg-entity>
+<dwg-entity cls="AcDbPoint" id="79" ly="SPRK-PIPEMN"><ent-start x="822.160535983185" y="-2849.18853193741"/></dwg-entity>
+<dwg-entity cls="AcDbPoint" id="78" ly="SPRK-PIPEBL"><ent-start x="567.160564944109" y="-2783.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="77" ly="SPRK-PIPEMN"><ent-start x="822.1605359832" y="-2729.18853193741"/><ent-end x="933.160538063651" y="-2729.18853193741"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="76" ly="SPRK-PIPEMN"><ent-start x="822.160535983185" y="-2849.18853193741"/><ent-end x="822.160535983185" y="-2729.18853193741"/></dwg-entity>
+<dwg-entity cls="AcDbArc" id="75" ly="SPRK-PIPEBL"><ent-size h="4.50000000000022"/><ent-start x="717.160564944101" y="-2783.04123477868"/><ent-ang alpha="2.92806423624239" beta="0.213528417347404"/></dwg-entity>
+<dwg-entity cls="AcDbArc" id="74" ly="SPRK-PIPEBL"><ent-size h="4.50000000000022"/><ent-start x="837.160564944101" y="-2783.04123477868"/><ent-ang alpha="2.92806423624239" beta="0.213528417347404"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="73" ly="SPRK-PIPEBL"><ent-start x="717.160564944109" y="-2777.04123477868"/><ent-end x="717.160564944109" y="-2783.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="72" ly="SPRK-PIPEBL"><ent-start x="837.160564944109" y="-2777.04123477868"/><ent-end x="837.160564944109" y="-2783.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="71" ly="SPRK-PIPEBL"><ent-start x="822.1605359832" y="-2783.04123477868"/><ent-end x="837.160564944101" y="-2783.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="70" ly="sprk-pipemn 1h"><ent-start x="567.160564944109" y="-2783.04123477868"/><ent-end x="822.1605359832" y="-2783.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="69" ly="SPRK-PIPEBL"><ent-start x="573.160564944109" y="-2777.04123477868"/><ent-end x="573.160564944109" y="-2783.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="68" ly="SPRK-PIPEBL"><ent-start x="567.160564944109" y="-2777.04123477868"/><ent-end x="573.160564944109" y="-2777.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbBlockReference" id="67" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="837.160564944109" y="-2777.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbBlockReference" id="66" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="717.160564944109" y="-2777.04123477868"/></dwg-entity>
+<dwg-entity cls="AcDbBlockReference" id="65" ly="sprk-hd-conc" name="sprk-hd-conc"><ent-start x="567.160564944109" y="-2777.04123477868"/></dwg-entity>
+</area-body>
+<area-options xmlns="http://dwg.autopipes.org">
+<main-label>M-</main-label><main-start-no>1</main-start-no><branch-label>#</branch-label><branch-start-no>1</branch-start-no><ignore-shorter-than>1'</ignore-shorter-than><cut-longer-than>10'6"</cut-longer-than><cut-branch-into>7'</cut-branch-into><cut-main-into>10'6" 10' 9'</cut-main-into><main-cut-clearance>6"</main-cut-clearance>
+</area-options>
+<area-id xmlns="http://dwg.autopipes.org">12</area-id>
+<area-name xmlns="http://dwg.autopipes.org">Area-12</area-name>
+</dwg:area-root>

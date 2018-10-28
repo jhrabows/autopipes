@@ -1,0 +1,60 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+<!-- Single branch with 3 pipes, 2 of which are equal -->
+  <dwg-id xmlns="http://dwg.autopipes.org">23</dwg-id>
+  <area-body xmlns="http://dwg.autopipes.org">
+      <dwg-entity cls="AcDbBlockReference" id="2127945096" ly="SPRK-HD-UP" name="AREA-CONFIG">
+      <ent-start x="90.4972578199432" y="-2162.47778006559"/>
+        <attributes>
+          <entry xmlns=""><key>AREA-ID</key><value>2</value></entry>
+          <entry xmlns=""><key>AREA-NAME</key><value>Area-2</value></entry>
+          <entry xmlns=""><key>MAIN-LABEL</key><value>M</value></entry>
+          <entry xmlns=""><key>MAIN-START-NO</key><value>1</value></entry>
+          <entry xmlns=""><key>BRANCH-LABEL</key><value>#</value></entry>
+          <entry xmlns=""><key>BRANCH-START-NO</key><value>1</value></entry>
+        </attributes>
+      </dwg-entity>
+      <dwg-entity cls="AcDbPoint" id="2127944608" ly="SPRK-HD-UP">
+        <ent-start x="283.156731913245" y="-2251.81034368007"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbBlockReference" id="2127944520" ly="SPRK-HD-UP" name="SPRK-HD-UP">
+        <ent-start x="280.28156343941" y="-2283.35014606563"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbBlockReference" id="2127944512" ly="SPRK-HD-UP" name="SPRK-HD-UP">
+        <ent-start x="200.28156343941" y="-2283.35014606563"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbLine" id="2127944472" ly="SPRK-PIPE-4GR-VIC">
+        <ent-start x="128.583144899223" y="-2171.47777888199"/>
+        <ent-end x="90.4972635337072" y="-2171.47777888199"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbLine" id="2127944464" ly="sprk dry pipeBL">
+        <ent-start x="240.28156343941" y="-2283.35014606563"/>
+        <ent-end x="240.28156343941" y="-2251.81034368007"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbLine" id="2127944456" ly="sprk dry pipeBL">
+        <ent-start x="280.28156343941" y="-2283.35014606563"/>
+        <ent-end x="200.28156343941" y="-2283.35014606563"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbLine" id="2127944400" ly="SPRK-PIPE-4GR-VIC">
+        <ent-start x="128.583144899223" y="-2251.81034368007"/>
+        <ent-end x="283.156731913245" y="-2251.81034368007"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbArc" id="2127944392" ly="SPRK-PIPE-4GR-VIC">
+        <ent-size h="3.21084066151343"/>
+        <ent-start x="128.583144899223" y="-2171.47777888199"/>
+        <ent-ang alpha="5.75813492029771" beta="3.66664304047167"/>
+      </dwg-entity>
+      <dwg-entity cls="AcDbLine" id="2127944384" ly="SPRK-PIPE-4GR-VIC">
+        <ent-start x="128.583144899223" y="-2171.47777888199"/>
+        <ent-end x="128.583144899223" y="-2251.81034368007"/>
+      </dwg-entity>
+  </area-body>
+  <area-options xmlns="http://dwg.autopipes.org">
+      <main-label>M</main-label>
+      <main-start-no>1</main-start-no>
+      <branch-label>#</branch-label>
+      <branch-start-no>1</branch-start-no>
+  </area-options>
+  <area-id xmlns="http://dwg.autopipes.org">2</area-id>
+  <area-name xmlns="http://dwg.autopipes.org">Area-2</area-name>
+</dwg:area-root>
+

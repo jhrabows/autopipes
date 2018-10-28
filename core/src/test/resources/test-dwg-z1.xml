@@ -1,0 +1,12 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+ <dwg-id xmlns="http://dwg.autopipes.org">322</dwg-id>
+ <area-body xmlns="http://dwg.autopipes.org">
+  <dwg-entity cls="AcDbPoint" id="2130063704" ly="text"><ent-start x="196.921092874071" y="300.52502193665"/></dwg-entity>
+  <dwg-entity cls="AcDbLine" id="2130063424" ly="PIPEBL"><ent-start x="172.55866110021" y="599.082642620928"/><ent-end x="196.921092874071" y="426.525021936651"/></dwg-entity>
+  <dwg-entity cls="AcDbCircle" id="2130063416" ly="HEADS"><ent-size h="3.75"/><ent-start x="189.334409853569" y="480.26103577367"/></dwg-entity>
+  <dwg-entity cls="AcDbCircle" id="2130063408" ly="HEADS"><ent-size h="3.75"/><ent-start x="172.55866110021" y="599.082642620928"/></dwg-entity>
+  <dwg-entity cls="AcDbLine" id="2130063384" ly="PIPEMN"><ent-start x="196.921092874071" y="300.52502193665"/><ent-end x="196.921092874071" y="426.525021936651"/></dwg-entity>
+  <dwg-entity cls="AcDbArc" id="2130141080" ly="PIPEBL"><ent-size h="4.50000000000023"/><ent-start x="196.921092874071" y="426.525021936651"/><ent-ang alpha="1.35726790944747" beta="4.92591739773212"/></dwg-entity>
+  <dwg-entity cls="AcDbLine" id="2130140992" ly="PIPEMN"><ent-start x="196.921092874071" y="426.525021936651"/><ent-end x="347.106427055639" y="426.525021936651"/></dwg-entity>
+</area-body><area-options xmlns="http://dwg.autopipes.org"/></dwg:area-root>
+

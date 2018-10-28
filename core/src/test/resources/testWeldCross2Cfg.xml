@@ -1,0 +1,13 @@
+<dwg:dwg-root xmlns:dwg="http://dwg.autopipes.org">
+<dwg-name xmlns="http://dwg.autopipes.org">test 2cross</dwg-name>
+<dwg-text-size xmlns="http://dwg.autopipes.org">7</dwg-text-size>
+<dwg-update-date xmlns="http://dwg.autopipes.org">2015-04-19T21:25:59</dwg-update-date>
+<options-root xmlns="http://dwg.autopipes.org">
+<layers-root><layer name="SPRK-CUTS" type="Output"/>
+<layer name="SPRK-PIPEMN" type="Main" sub-type="weldedGroove" vendor="FIRELOCK" main-diameter="D2"/><layer name="SPRK-PIPEBL" type="Branch"><headcount><entry xmlns=""><key>1</key><value>D1</value></entry><entry xmlns=""><key>2</key><value>D15</value></entry></headcount></layer><layer name="sprk-pipemn 1h" type="Main" sub-type="weldedGroove" vendor="FIRELOCK" main-diameter="D15"/><layer name="sprk-pipemn 2h" type="Main" sub-type="weldedGroove" vendor="FIRELOCK" main-diameter="D25"/>
+</layers-root>
+<error-color>Magenta</error-color>
+<weld-if-equal>Y</weld-if-equal>
+</options-root>
+<dwg-id xmlns="http://dwg.autopipes.org">121</dwg-id>
+</dwg:dwg-root>

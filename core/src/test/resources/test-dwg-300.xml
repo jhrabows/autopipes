@@ -1,0 +1,66 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+	<dwg-id xmlns="http://dwg.autopipes.org">122</dwg-id>
+	<area-body xmlns="http://dwg.autopipes.org">
+		<dwg-entity cls="AcDbBlockReference" id="2125936728" ly="PIPEMN" name="AREA-CONFIG">
+			<ent-start x="2755.07047784362" y="-746.215826266445"/>
+			<attributes>
+				<entry xmlns="">
+					<key>AREA-ID</key>
+					<value>2</value>
+				</entry>
+				<entry xmlns="">
+					<key>AREA-NAME</key>
+					<value>Area-2</value>
+				</entry>
+				<entry xmlns="">
+					<key>MAIN-LABEL</key>
+					<value>M-</value>
+				</entry>
+				<entry xmlns="">
+					<key>MAIN-START-NO</key>
+					<value>1</value>
+				</entry>
+				<entry xmlns="">
+					<key>BRANCH-LABEL</key>
+					<value>#</value>
+				</entry>
+				<entry xmlns="">
+					<key>BRANCH-START-NO</key>
+					<value>1</value>
+				</entry>
+			</attributes>
+		</dwg-entity>
+		<dwg-entity cls="AcDbPoint" id="2125936712" ly="PIPEMN">
+			<ent-start x="2813.15441571573" y="-670.588994802039"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="2125936704" ly="PIPEMN">
+			<ent-start x="2780.57048072191" y="-670.588994802039"/>
+			<ent-end x="2813.15441571573" y="-670.588994802039"/>
+		</dwg-entity>
+		<dwg-entity
+			cls="AcDbLine" id="2125936656" ly="PIPEMN">
+			<ent-start x="2780.57048072191" y="-746.215826266445"/>
+			<ent-end x="2755.07047784362" y="-746.215826266445"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="2125936648" ly="PIPEMN">
+			<ent-start x="2780.57048072191" y="-746.215826266445"/>
+			<ent-end x="2780.57048072191" y="-670.588994802039"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbLine" id="2125936640" ly="PIPEBL">
+			<ent-start x="2786.57048072191" y="-722.215826266445"/>
+			<ent-end x="2780.57048072191" y="-722.215826266445"/>
+		</dwg-entity>
+		<dwg-entity cls="AcDbBlockReference" id="2125936568" ly="sprk-hd-conc" name="sprk-hd-conc">
+			<ent-start x="2786.57048072191" y="-722.215826266445"/>
+		</dwg-entity>
+	</area-body>
+	<area-options xmlns="http://dwg.autopipes.org">
+		<main-label>M-</main-label>
+		<main-start-no>1</main-start-no>
+		<branch-label>#</branch-label>
+		<branch-start-no>1</branch-start-no>
+	</area-options>
+	<area-id xmlns="http://dwg.autopipes.org">2</area-id>
+	<area-name xmlns="http://dwg.autopipes.org">Area-2</area-name>
+</dwg:area-root>
+

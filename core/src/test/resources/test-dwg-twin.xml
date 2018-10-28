@@ -1,0 +1,20 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+  <dwg-id xmlns="http://dwg.autopipes.org">81</dwg-id>
+  <area-options  xmlns="http://dwg.autopipes.org"/>
+  <area-body xmlns="http://dwg.autopipes.org">
+    <dwg-entity cls="AcDbCircle" id="2130067120" ly="BL"><ent-size h="6.75925166752614"/><ent-start x="197.416024280074" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbCircle" id="2130067112" ly="BL"><ent-size h="6.75925166752614"/><ent-start x="71.3834161545755" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbCircle" id="2130067104" ly="BL"><ent-size h="6.83796804914334"/><ent-start x="-50.1480271762483" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbCircle" id="2130067096" ly="BL"><ent-size h="6.31812985578154"/><ent-start x="-176.180635301747" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067088" ly="BL"><ent-start x="121.896485016861" y="25.3581028961561"/><ent-end x="121.896485016861" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067080" ly="BL"><ent-start x="121.896485016861" y="93.3177735043489"/><ent-end x="197.416024280074" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067072" ly="BL"><ent-start x="121.896485016861" y="93.3177735043489"/><ent-end x="71.3834161545755" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067064" ly="BL"><ent-start x="-125.667566439462" y="93.3177735043489"/><ent-end x="-176.180635301747" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067056" ly="BL"><ent-start x="-125.667566439462" y="93.3177735043489"/><ent-end x="-50.1480271762483" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067048" ly="BL"><ent-start x="-125.667566439462" y="25.3581028961561"/><ent-end x="-125.667566439462" y="93.3177735043489"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067024" ly="ML"><ent-start x="121.896485016861" y="25.3581028961561"/><ent-end x="121.896485016861" y="-59.0917818411887"/></dwg-entity>
+    <dwg-entity cls="AcDbLine" id="2130067016" ly="ML"><ent-start x="-125.667566439462" y="25.3581028961561"/><ent-end x="121.896485016861" y="25.3581028961561"/></dwg-entity>
+  </area-body>
+</dwg:area-root>
+
+

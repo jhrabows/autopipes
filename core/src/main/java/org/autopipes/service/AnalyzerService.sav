@@ -1,0 +1,2043 @@
+package org.autopipes.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import org.apache.log4j.Logger;
+import org.autopipes.model.AreaBody;
+import org.autopipes.model.AreaCutSheet;
+import org.autopipes.model.AreaOptions;
+import org.autopipes.model.DrawingArea;
+import org.autopipes.model.DrawingLayer;
+import org.autopipes.model.DrawingOptions;
+import org.autopipes.model.DwgEntity;
+import org.autopipes.model.DwgPoint;
+import org.autopipes.model.FloorDrawing;
+import org.autopipes.model.Pipe;
+import org.autopipes.model.PipeAttachment;
+import org.autopipes.model.PipeConfig;
+import org.autopipes.model.PipeFitting;
+import org.autopipes.model.AreaBody.Defect;
+import org.autopipes.model.AreaBody.PointInfo;
+import org.autopipes.model.AreaCutSheet.BranchInfo;
+import org.autopipes.model.AreaCutSheet.CutSheetInfo;
+import org.autopipes.model.DrawingArea.Readiness;
+import org.autopipes.model.DrawingLayer.Designation;
+import org.autopipes.model.DwgEntity.AcClass;
+import org.autopipes.takeout.Attachment;
+import org.autopipes.takeout.Diameter;
+import org.autopipes.takeout.Fitting;
+import org.autopipes.takeout.TakeoutInfo;
+import org.autopipes.takeout.TakeoutRepository;
+import org.autopipes.takeout.Vendor;
+import org.autopipes.takeout.Fitting.Direction;
+import org.autopipes.takeout.Fitting.Type;
+import org.autopipes.util.CollectionComparator;
+import org.autopipes.util.CommonDecimal;
+import org.autopipes.util.GraphUtils;
+import org.autopipes.util.PlaneGeo;
+import org.autopipes.util.PlaneGeo.Divider;
+import org.autopipes.util.PlaneGeo.Point;
+import org.jgrapht.Graphs;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
+
+public class AnalyzerService {
+	private static Logger logger = Logger.getLogger(AnalyzerService.class);
+
+    private PlaneGeo planeGeo;
+    private TakeoutRepository takeout;
+    private Fitting.Factory fittingFactory;
+    private PipeConfig pipeConfig;
+   	private PipeCollectionComparator pipeCollectionComparator;
+   	private UndirectedGraph<Pipe, DefaultEdge> parallelGraph;
+	private Set<Pipe> verticalSet;
+	private Set<Pipe> sidewallSet;
+   	private List<Pipe> parallelEntityList;
+   	private CollectionComparator<Pipe> pipeSetCollectionComparator;
+   	private Comparator<Collection<Pipe>> pipeSetCollectionComparator2;
+	private PipeFitting[] pipeFittingTripple;
+   	private Set<DrawingLayer> drawingLayerSet;
+   	
+/*   	public List<Point> getThreadCutList() {
+   		if(threadCutList == null){
+   			threadCutList = new ArrayList<Point>();
+   		}
+		return threadCutList;
+	}*/
+
+	private List<Pipe> pipeList;
+
+	public List<Pipe> getPipeList() {
+		if(pipeList == null){
+		   	pipeList = new ArrayList<Pipe>();
+		}
+		return pipeList;
+	}
+/*
+	public Map<Point, List<Point>> getSubMap() {
+		if(subMap == null){
+			subMap = new LinkedHashMap<Point, List<Point>>();
+		}
+		return subMap;
+	}
+	*/
+/*
+	public List<Pipe> getPipeSubdivision() {
+		if(pipeSubdivision == null){
+			pipeSubdivision = new ArrayList<Pipe>();
+		}
+		return pipeSubdivision;
+	}
+	*/
+/*
+	public List<PipeFitting> getAvoidedPoints() {
+		if(avoidedPoints == null){
+			avoidedPoints = new ArrayList<PipeFitting>();
+		}
+		return avoidedPoints;
+	}
+*/
+	public Set<DrawingLayer> getDrawingLayerSet() {
+		if(drawingLayerSet == null){
+			drawingLayerSet = new HashSet<DrawingLayer>();
+		}
+		return drawingLayerSet;
+	}
+
+	public PipeFitting[] getPipeFittingTripple() {
+		if(pipeFittingTripple == null){
+			pipeFittingTripple = new PipeFitting[3];
+		}
+		return pipeFittingTripple;
+	}
+
+	public CollectionComparator<Pipe> getPipeSetCollectionComparator() {
+		if(pipeSetCollectionComparator == null){
+			pipeSetCollectionComparator =  new CollectionComparator<Pipe>();
+		}
+		return pipeSetCollectionComparator;
+	}
+	
+    private static Diameter maxDiameter(Collection<Pipe> pipes){
+    	Diameter ret = null;
+    	for(Pipe pipe : pipes){
+    		Diameter d = pipe.getDiameter();
+    		if(ret == null || d.compareTo(ret) > 0){
+    			ret = d;
+    		}
+    	}
+    	return ret;
+    }
+    
+    private static String maxLayer(Collection<Pipe> pipes){
+    	String ret = null;
+    	Diameter diam = null;
+    	for(Pipe pipe : pipes){
+    		Diameter d = pipe.getDiameter();
+    		if(diam == null || d.compareTo(diam) > 0){
+    			diam = d;
+    			ret = pipe.getLayerName();
+    		}
+    	}
+    	return ret;
+    }
+    
+    // if main pipes in the collection are present and on the same layer, return that layer name.
+    // Otherwise return null
+    private static String commonMainName(Collection<Pipe> pipes){
+    	String ret = null;
+    	for(Pipe pipe : pipes){
+    		if(pipe.getDesignation() == Designation.Main){
+        		if(ret == null){
+        			ret = pipe.getLayerName();
+        		}else{
+        			if(!ret.equals(pipe.getLayerName())){
+        				ret = null;
+        				break;
+        			}
+        		}
+    		}
+    	}
+    	return ret;
+    }
+    
+    private static Attachment commonSubType(final DrawingOptions opt, Collection<Pipe> pipes){
+    	Attachment ret = null;
+    	String name;
+    	Attachment subType;
+    	for(Pipe pipe : pipes){
+			name = pipe.getLayerName();
+			if(opt.findLayer(name).getType() == Designation.Branch){
+				subType = Attachment.threaded;
+			}else{
+				subType = opt.findLayer(name).getSubType();
+				if(subType == Attachment.weldedGroove){
+					subType = Attachment.grooved;
+				}else if(subType == Attachment.welded){
+					subType = Attachment.threaded;
+				}
+			}
+    		if(ret == null){
+    			ret = subType;
+    		}else{
+    			if(ret != subType){
+    				ret = null;
+    				break;
+    			}
+    		}
+    	}
+    	return ret;
+    }
+    
+    private static boolean hasMain(Collection<Pipe> pipes){
+    	for(Pipe pipe : pipes){
+    		if(pipe.getDesignation() == Designation.Main){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
+	
+	public Comparator<Collection<Pipe>> getPipeSetCollectionComparator2() {
+		if(pipeSetCollectionComparator2 == null){
+			pipeSetCollectionComparator2 =  new Comparator<Collection<Pipe>>() {
+	
+				@Override
+				public int compare(Collection<Pipe> o1, Collection<Pipe> o2) {
+					int ret = o2.size() - o1.size(); // descending on size
+					if(ret == 0){
+						Diameter d1 = maxDiameter(o1);
+						Diameter d2 = maxDiameter(o2);
+						if(d1 != null || d2 != null){
+							if(d1 != null && d2 != null){
+								ret = d2.compareTo(d1); // desc on diam
+							}else if(d1 == null){
+								ret = 1;
+							}else{
+								ret = -1;
+							}
+						}
+					}
+					return ret;
+				}
+			};
+		}
+		return pipeSetCollectionComparator2;
+	}
+
+
+	public List<Pipe> getParallelEntityList() {
+		if(parallelEntityList == null){
+			parallelEntityList = new ArrayList<Pipe>();
+		}
+		return parallelEntityList;
+	}
+
+	public Set<Pipe> getVerticalSet() {
+   		if(verticalSet == null){
+   			verticalSet = new HashSet<Pipe>();
+   		}
+		return verticalSet;
+	}
+
+	public Set<Pipe> getSidewallSet() {
+		if(sidewallSet == null){
+			sidewallSet = new HashSet<Pipe>();
+		}
+		return sidewallSet;
+	}
+
+
+    public UndirectedGraph<Pipe, DefaultEdge> getParallelGraph() {
+    	if(parallelGraph == null){
+    		parallelGraph = new SimpleGraph<Pipe, DefaultEdge>(DefaultEdge.class);
+    	}
+		return parallelGraph;
+	}
+
+	public PipeCollectionComparator getPipeCollectionComparator() {
+    	if(pipeCollectionComparator == null){
+    		pipeCollectionComparator = new PipeCollectionComparator();
+    	}
+		return pipeCollectionComparator;
+	}
+	/**
+	 * Returns full list of grooved pipes which start is not hole-based
+	 * and is not a grooved coupling which joins 2 grooved pipes.
+	 * The list is in a form of vertex/direction pairs so is unchanged
+	 * by partitions.
+	 * @param dwg
+	 * @param areaBody
+	 * @return the list
+	 */
+    private Map<PipeFitting, Set<Direction>> getGroovedChainStarts(FloorDrawing dwg, AreaBody areaBody) {
+    	if(areaBody.getGroovedChainStarts() == null){
+    		calcChainStarts2(dwg, areaBody);
+    	}
+    	return areaBody.getGroovedChainStarts();
+    }
+	/**
+	 * Returns full list of grooved pipes which start is not hole-based
+	 * and is not a grooved coupling which joins 2 grooved pipes.
+	 * The list is in a form of vertex/direction pairs so is unchanged
+	 * by partitions.
+	 * @param dwg
+	 * @param areaBody
+	 * @return the list
+	 */
+    private Map<PipeFitting, Set<Direction>> getThreadedChainStarts(FloorDrawing dwg, AreaBody areaBody) {
+    	if(areaBody.getThreadedChainStarts() == null){
+    		calcChainStarts2(dwg, areaBody);
+    	}
+    	return areaBody.getThreadedChainStarts();
+    }
+    /**
+     * Checks if this vertex is a middle of a coupling chain. This is a case if
+     * a coupling joins 2 threaded or 2 non-threaded. In the latter case we also
+     * require that the coupling be non-threaded.
+     * @param dwg the drawing
+     * @param areaBody the area
+     * @param pf the vertex
+     * @return <code>true</code> if it is
+     */
+    private boolean isCouplingContinuation(FloorDrawing dwg, AreaBody areaBody, PipeFitting pf){
+		if(pf.getFitting().getType() != Type.Coupling
+				&& pf.getFitting().getType() != Type.Reducer){
+			return false; // not a coupling or reducer
+		}
+		DrawingLayer firstLayer = null;
+		for(Pipe p :areaBody.getPipeGraph().edgesOf(pf)){
+			if(p.getDesignation() == Designation.Head){
+				return false; // pipe ended with horizontal head
+			}
+			DrawingLayer layer = dwg.getOptionsRoot().findLayer(p.getLayerName());
+			if(firstLayer == null){
+				firstLayer = layer;
+			}else{
+				// 2nd iteration
+				if((layer.getType() == Designation.Branch || layer.getSubType() == Attachment.threaded || layer.getSubType() == Attachment.welded)
+						&& (firstLayer.getType() == Designation.Branch || firstLayer.getSubType() == Attachment.threaded || firstLayer.getSubType() == Attachment.welded)){
+					return true; // branch or threaded main on both sides
+				}
+				if(layer.getType() == Designation.Branch || layer.getSubType() == Attachment.threaded || layer.getSubType() == Attachment.welded
+						|| firstLayer.getType() == Designation.Branch || firstLayer.getSubType() == Attachment.threaded || firstLayer.getSubType() == Attachment.welded){
+					return false; // branch or threaded main meets non-threaded
+				}
+				if(pf.getFitting().getAttachment() == Attachment.grooved){
+					return true; // 2 grooved meeting at a grooved coupling
+				}
+				return false; // 2 grooved meeting at threaded
+			}	
+		}
+		throw new IllegalArgumentException("Unable to check coupling configuration");
+    }
+    private void calcChainStarts2(FloorDrawing dwg, AreaBody areaBody) {
+    	Map<PipeFitting, Set<Direction>> nonthreadedChainStarts // grooved or welded main
+    		= new HashMap<PipeFitting, Set<Direction>>();
+    	Map<PipeFitting, Set<Direction>>  threadedChainStarts // branches and threaded main
+    		= new HashMap<PipeFitting, Set<Direction>>();
+    	Set<Pipe> workPipeSet = new HashSet<Pipe>();
+    	
+    	// populate work-set with mains and branches
+		for(Pipe p : areaBody.getPipeGraph().edgeSet()){
+			if(p.isVertical() || p.getDesignation() == Designation.Head){
+				continue; // not horizontal pipe
+			}
+			workPipeSet.add(p);
+		}    	
+    	while(!workPipeSet.isEmpty()){
+    		Pipe nextPipe = workPipeSet.iterator().next();
+    		// move in both directions
+    		for(int i = 0; i < 2; i++){
+    			Pipe p = nextPipe;
+    			PipeFitting extreme = (i == 0) ? areaBody.getStartFitting(p) : areaBody.getEndFitting(p);
+    			while(true){
+    	    		workPipeSet.remove(p);
+        			
+        			if(!isCouplingContinuation(dwg, areaBody, extreme) && areaBody.isExtremeGroovedPipe(p, extreme)){
+        				break;
+        			}
+       				p = areaBody.getContinuationPipe(p, extreme);
+       				extreme = areaBody.getOppositeFitting(p, extreme);
+    			}
+    			if(i == 0){
+    				// record start fitting
+    				DrawingLayer layer = dwg.getOptionsRoot().findLayer(p.getLayerName());
+    				Map<PipeFitting, Set<Direction>> targetMap = 
+    				(layer.getType() == Designation.Main
+    						&& layer.getSubType() != Attachment.threaded) ? nonthreadedChainStarts : threadedChainStarts;
+
+    				Set<Direction> directions = targetMap.get(extreme);
+    				if(directions == null){
+    					directions = new HashSet<Direction>(4);
+    					targetMap.put(extreme, directions);
+    				}
+    				PipeAttachment pa = areaBody.getAttachmentToFitting(p, extreme);
+    				directions.add(pa.getDirectionInFitting());
+    			}
+    		}
+    	}
+
+		areaBody.setGroovedChainStarts(nonthreadedChainStarts);
+		areaBody.setThreadedChainStarts(threadedChainStarts);
+	}
+
+    /**
+     * Finds horizontal pipes which starts are true ends (not hole-based)
+     * and are not coupling continuations. The pipes are collected into
+     * a threaded and non-threaded list.
+     */
+    private void calcChainStarts(FloorDrawing dwg, AreaBody areaBody) {
+    	Map<PipeFitting, Set<Direction>> groovedChainStarts
+    		= new HashMap<PipeFitting, Set<Direction>>();
+    	Map<PipeFitting, Set<Direction>>  threadedChainStarts
+    		= new HashMap<PipeFitting, Set<Direction>>();
+
+		for(Pipe p : areaBody.getPipeGraph().edgeSet()){
+			if(p.isVertical() || p.getDesignation() == Designation.Head){
+				continue; // not horizontal pipe
+			}
+			PipeFitting start = areaBody.getStartFitting(p);
+			if(isCouplingContinuation(dwg, areaBody, start)){
+				continue;
+			}
+			DrawingLayer layer = dwg.getOptionsRoot().findLayer(p.getLayerName());
+			Map<PipeFitting, Set<Direction>> targetMap = null;
+			if(layer.getType() == Designation.Main
+					&& layer.getSubType() != Attachment.threaded){
+				 // grooved or welded main
+				if(!areaBody.isInitialGroovedPipe(p)){
+					continue; // extension of grooved across hole
+				}
+				targetMap = groovedChainStarts;
+			}
+			else{ 
+				 // branch or threaded main
+				targetMap = threadedChainStarts;
+			}
+			Set<Direction> directions = targetMap.get(start);
+			if(directions == null){
+				directions = new HashSet<Direction>(4);
+				targetMap.put(start, directions);
+			}
+			directions.add(p.getStartAttachment().getDirectionInFitting());
+		}
+		areaBody.setGroovedChainStarts(groovedChainStarts);
+		areaBody.setThreadedChainStarts(threadedChainStarts);
+	}
+
+    private void calcThreadTakout(FloorDrawing dwg, AreaBody areaBody){
+    	for(Map.Entry<PipeFitting, Set<Direction>> chainStart
+    			: getThreadedChainStarts(dwg, areaBody).entrySet()){
+    		for(Direction dir : chainStart.getValue()){
+    			// get pipe which starts the chain
+    			Pipe pipe = areaBody.getPipe(chainStart.getKey(), dir);
+				boolean endOfChain = false;
+				double chainTakeout = 0;
+				// iterate the chain
+    			while(!endOfChain){
+    				endOfChain = !isCouplingContinuation(dwg, areaBody,
+    							areaBody.getEndFitting(pipe));
+					BigDecimal startTakeout = pipe.getStartAttachment().getTakeout();
+					BigDecimal endTakeout = pipe.getEndAttachment().getTakeout();
+					chainTakeout += (startTakeout == null) ? 0 : startTakeout.doubleValue();
+					chainTakeout += (endTakeout == null) ? 0 : endTakeout.doubleValue();
+					
+    				pipe.setTakeout((endOfChain ? new BigDecimal(chainTakeout)
+    					: CommonDecimal.Zero.getMeasure()));
+					PipeFitting pf = areaBody.getEndFitting(pipe);
+					pipe = areaBody.getContinuationPipe(pipe, pf);
+    			}
+    		}
+    	}
+    }
+    
+    private void calcMainTakout(FloorDrawing dwg, DrawingArea area){
+    	AreaBody areaBody = area.getAreaBody();
+    	AreaOptions areaOptions = area.getAreaOptions();
+    	int roundScale = areaOptions.getTakeoutRounding();
+    	long roundFactor = Math.round(Math.pow(10, roundScale));
+    	for(Map.Entry<PipeFitting, Set<Direction>> chainStart
+    			: getGroovedChainStarts(dwg, areaBody).entrySet()){
+    		for(Direction dir : chainStart.getValue()){
+    			// get pipe which starts the chain
+    			PipeFitting startPF = chainStart.getKey();
+    			Pipe pipe = areaBody.getPipe(startPF, dir);
+		//		boolean startOfChain = true;
+				boolean endOfChain = false;
+				double deferredTakeout = 0;
+				// iterate the chain
+    			while(!endOfChain){
+    				PipeAttachment pa = areaBody.getAttachmentToFitting(pipe, startPF);
+    				double startTakeout = pa.getTakeout().doubleValue();
+    				PipeFitting endPF = areaBody.getOppositeFitting(pipe, startPF);
+    				pa = areaBody.getAttachmentToFitting(pipe, endPF);
+    				double endTakeout = pa.getTakeout().doubleValue();
+    				endOfChain = areaBody.isExtremeGroovedPipe(pipe, endPF)
+    					&& !isCouplingContinuation(dwg, areaBody, endPF);
+       				long takeout = 0;
+    				BigDecimal bdTakeout;
+    				if(!endOfChain){
+	    				takeout = Math.round(startTakeout + endTakeout);
+	    				deferredTakeout += (startTakeout + endTakeout
+	    						- takeout);
+	    				bdTakeout = new BigDecimal(takeout);
+    				}else{
+						takeout = Math.round(roundFactor*(startTakeout + endTakeout
+								+ deferredTakeout));
+	    				bdTakeout = (new BigDecimal(takeout)).movePointLeft(roundScale);
+    				}
+    				pipe.setTakeout(bdTakeout);
+					pipe = areaBody.getContinuationPipe(pipe, endPF);
+					startPF = endPF;
+    			}
+    		}
+    	}
+    }
+	/**
+	 * Make sure that individual pieces add up
+	 */
+	public void correctMainSpan(FloorDrawing dwg, AreaBody areaBody){
+    	for(Map.Entry<PipeFitting, Set<Direction>> chainStart
+    			: getGroovedChainStarts(dwg, areaBody).entrySet()){
+    		for(Direction dir : chainStart.getValue()){
+    			// get pipe which starts the chain
+    			Pipe pipe = areaBody.getPipe(chainStart.getKey(), dir);
+				boolean endOfChain = false;
+				BigDecimal totalSpan = CommonDecimal.Zero.getMeasure();
+				Pipe maxLenghPiece = null;
+				PipeFitting startOfGroovedPipe = chainStart.getKey();
+				// iterate the chain
+    			while(!endOfChain){
+    				boolean endOfGroovedPipe = areaBody.isTerminalGroovedPipe(pipe);
+    				endOfChain = endOfGroovedPipe && !isCouplingContinuation(dwg, areaBody,
+    							areaBody.getEndFitting(pipe));
+    				totalSpan = totalSpan.add(pipe.getSpan());
+    				if(!endOfGroovedPipe){
+    					if(maxLenghPiece == null){
+    						maxLenghPiece = pipe;
+    					}else{
+    						if(pipe.getSpan().compareTo(maxLenghPiece.getSpan()) > 0){
+    							maxLenghPiece = pipe;
+    						}
+    					}
+    				}else{
+   			    		PipeFitting end = areaBody.getEndFitting(pipe);
+   			    	    if(maxLenghPiece != null){
+    			    		double d = PlaneGeo.distance(startOfGroovedPipe, end);
+    			    		BigDecimal trueSpan = new BigDecimal(Math.round(d));
+    			    		BigDecimal delta = trueSpan.subtract(totalSpan);
+    			    		if(delta.compareTo(CommonDecimal.Zero.getMeasure()) != 0){
+    			    			logger.debug("correcting span by " + delta);
+    			    			BigDecimal oldSpan = maxLenghPiece.getSpan();
+    			    			maxLenghPiece.setSpan(oldSpan.add(delta));
+    			    		}
+    					}
+    				// reset for next threaded pipe
+    					totalSpan = CommonDecimal.Zero.getMeasure();
+    					maxLenghPiece = null;
+    					startOfGroovedPipe = end;
+    				}
+					PipeFitting pf = areaBody.getEndFitting(pipe);
+					pipe = areaBody.getContinuationPipe(pipe, pf);
+    			}
+    		}
+    	}
+	}
+
+    
+    private void subdivideThreaded(FloorDrawing dwg, DrawingArea area){
+    	 AreaBody areaBody = area.getAreaBody();
+    	 long longPipe = area.getAreaOptions().getLongPipe();
+    	// initialize divider
+    	Divider divider = new Divider(this.getPlaneGeo());
+    	divider.setMaxSize(longPipe);
+    	if(area.getAreaOptions().getBranchCutList().isEmpty()){
+    		return; // no size specified
+    	}
+    	divider.setThreadedCutSize(area.getAreaOptions().getBranchCutList().get(0).longValue());
+    	// iterate over chain starts
+    	for(Map.Entry<PipeFitting, Set<Direction>> chainStart
+    			: getThreadedChainStarts(dwg, areaBody).entrySet()){
+    		for(Direction dir : chainStart.getValue()){
+    			// get pipe which starts the chain
+    			Pipe nextInChain = areaBody.getPipe(chainStart.getKey(), dir);
+				boolean endOfChain = false;
+				// iterate the chain
+				double chainTakeout = 0;
+				while(!endOfChain){
+					Pipe pipe = nextInChain;
+					BigDecimal startTakeout = pipe.getStartAttachment().getTakeout();
+					BigDecimal endTakeout = pipe.getEndAttachment().getTakeout();
+					chainTakeout += (startTakeout == null) ? 0 : startTakeout.doubleValue();
+					chainTakeout += (endTakeout == null) ? 0 : endTakeout.doubleValue();
+    				PipeFitting start = areaBody.getStartFitting(pipe);    				
+    				PipeFitting end = areaBody.getEndFitting(pipe);
+					endOfChain = !isCouplingContinuation(dwg, areaBody, end);
+					if(!endOfChain){
+						divider.subdivideThreaded(start, end);
+						// continue iteration
+						nextInChain = areaBody.getContinuationPipe(pipe, end);
+					}else{
+						// figure out the coupling that might be used for this pipe
+						Pipe[] pipes = {pipe, pipe};
+				    	Fitting f = fittingFactory.instanceOf(Type.Coupling, Attachment.threaded, null,
+				    			Arrays.asList(pipes));
+				    	double cutTakeout = 2*takeout.locateTakeout(f, Direction.E).doubleValue();
+				    	divider.subdivideLastThreaded(start, end, chainTakeout, cutTakeout);
+					}
+					if(!divider.getCutList().isEmpty()){
+						PipeAttachment startAttachment = areaBody.getAttachmentToFitting(pipe, start);
+						PipeAttachment endAttachment = areaBody.getAttachmentToFitting(pipe, end);
+						DrawingLayer layer = dwg.getOptionsRoot().findLayer(pipe.getLayerName());
+
+					    List<PipeFitting> breakups = areaBody.subdivideGraph(start, end,
+					    		 divider.getCutList());
+					    updateBreakups(areaBody, layer, startAttachment, endAttachment, start, end, breakups);
+					    if(!endOfChain){
+					    	// add takeouts for created cuts to the total
+						    if(!breakups.isEmpty()){
+						    	Fitting f = breakups.get(0).getFitting();
+						    	double cutTakeout = takeout.locateTakeout(f, Direction.E).doubleValue();
+						    	chainTakeout += cutTakeout*2*breakups.size();
+						    }
+					    }
+					}
+				}
+     		}
+    	}
+    }
+    
+    
+    private Readiness subdivideMain(FloorDrawing dwg, DrawingArea area){
+    	AreaBody areaBody = area.getAreaBody();
+    	long longPipe = area.getAreaOptions().getLongPipe();
+    	long cutClearance = area.getAreaOptions().getMainCutSpace();
+    	Readiness ret = Readiness.Ready;
+    	// initialize divider
+    	Divider divider = new Divider(this.getPlaneGeo());
+    	List<PipeFitting> avoids = new ArrayList<PipeFitting>(4);
+    	divider.setMaxSize(longPipe);
+    	divider.setAvoidMargin(cutClearance);
+    	divider.setCutSizes(area.getAreaOptions().getMainCutList());
+    	// iterate over chain starts
+    	for(Map.Entry<PipeFitting, Set<Direction>> chainStart
+    			: getGroovedChainStarts(dwg, areaBody).entrySet()){
+    		for(Direction dir : chainStart.getValue()){
+    			// get pipe which starts the chain
+    			PipeFitting startUnbrokenPF = chainStart.getKey();
+    			Pipe startUnbroken = areaBody.getPipe(startUnbrokenPF, dir);
+			//	boolean startOfChain = true;
+				boolean endOfChain = false;
+				// iterate the chain
+				double deferredTakeout = 0;
+    			while(!endOfChain){
+    				PipeAttachment pa = areaBody.getAttachmentToFitting(startUnbroken, startUnbrokenPF);
+    				double startTakeout = pa.getTakeout().doubleValue();
+    				avoids.clear();
+    				// continue across holes to avoid
+    				Pipe endUnbroken = startUnbroken;
+    				PipeFitting endUnbrokenPF = areaBody.getOppositeFitting(endUnbroken, startUnbrokenPF);
+    				while(!areaBody.isExtremeGroovedPipe(endUnbroken, endUnbrokenPF)){
+    				//	PipeFitting avoid = areaBody.getEndFitting(endUnbroken);
+    					avoids.add(endUnbrokenPF);
+    					endUnbroken = areaBody.getContinuationPipe(endUnbroken, endUnbrokenPF);
+    					endUnbrokenPF = areaBody.getOppositeFitting(endUnbroken, endUnbrokenPF);
+    				}
+    				// found next true pipe break
+    				PipeFitting start = startUnbrokenPF;    				
+    				PipeFitting end = endUnbrokenPF;
+    				// test for end of chain
+    				endOfChain = !isCouplingContinuation(dwg, areaBody, end);
+    				// first takeout rounded the usual way
+    				long rndStartTakeout = Math.round(startTakeout);
+    				deferredTakeout += (startTakeout - rndStartTakeout);
+    				long rndEndTakeout;
+    				PipeAttachment pa2 = areaBody.getAttachmentToFitting(endUnbroken, endUnbrokenPF);
+					double endTakeout = pa2.getTakeout().doubleValue();
+    				if(endOfChain){
+    					// end of coupling chain
+    					// round end takeout considering all previous errors
+    					rndEndTakeout = Math.round(endTakeout
+    						+ deferredTakeout);
+    				}else{
+    					// coupling: no takeout, reducer: usual rounding
+    					rndEndTakeout = Math.round(endTakeout);
+        				deferredTakeout += (endTakeout - rndEndTakeout);
+    					// continue chain iteration across coupling
+    					startUnbroken = areaBody.getContinuationPipe(endUnbroken, end);
+    					startUnbrokenPF = endUnbrokenPF;
+    				}
+    				if(divider.subdivide(start, end, rndStartTakeout, rndEndTakeout, avoids)){
+    					// subdivide
+    					for(Map.Entry<Point[], List<Point>> entry : divider.getCutMap().entrySet()){
+    						PipeFitting dividedStart = (PipeFitting)entry.getKey()[0];
+    						PipeFitting dividedEnd = (PipeFitting)entry.getKey()[1];
+    						Pipe toBeDivided = areaBody.getPipeGraph().getEdge(
+    								dividedStart, dividedEnd);
+    						PipeAttachment startAttachment = areaBody.getAttachmentToFitting(toBeDivided, dividedStart);
+    						PipeAttachment endAttachment = areaBody.getAttachmentToFitting(toBeDivided, dividedEnd);
+    						DrawingLayer layer = dwg.getOptionsRoot().findLayer(toBeDivided.getLayerName());
+
+    						
+    					    List<PipeFitting> breakups = areaBody.subdivideGraph(dividedStart, dividedEnd,
+    					    		 entry.getValue());
+    					    updateBreakups(areaBody, layer, startAttachment, endAttachment, dividedStart, dividedEnd, breakups);
+    					}
+    				}else{
+    					ret = Readiness.NoClearanceToCutMain;
+    				}
+    			}
+    		}
+    	}
+    	return ret;
+    }
+
+	/**
+     * Determines if this is a valid drawing area and sets up auxiliary structures
+     * in AreaBody.
+     * @param dwg
+     * @param area
+     */
+    public void validateArea(final FloorDrawing dwg, final DrawingArea area){
+    	try{
+        logger.info("+validateArea(" + dwg.getDwgName() + ")");
+        // Post de-serialization (attaching layer objects to entities etc).
+    	area.setAreaReadiness(Readiness.Ready);
+        prepareArea(dwg, area.getAreaBody()); // ???
+        if(area.getAreaBody().getDwgEntity().isEmpty()){
+            logger.info("-validateArea->Empty");
+        	area.setAreaReadiness(Readiness.Empty);
+        	return;
+        }
+        // combines info at end points snapping close-by locations
+        if(!buildPointMap(area.getAreaBody())){
+            logger.info("-validateArea->Cannot build map");
+        	area.setAreaReadiness(Readiness.NotReady);
+        }
+        // creates plane graph from edges, detecting mid-point breaks.
+        // (checks that branches are trees and orders them ?)
+        if(!buildEdgeGraph(dwg.getOptionsRoot(), area.getAreaBody())){
+            logger.info("-validateArea->Cannot build edge graph");
+        	area.setAreaReadiness(Readiness.NotReady);
+         }
+        // Check connectivity (before adding Sink)
+    	if(area.getAreaBody().getCenters().size() > 1){
+            logger.info("-validateArea->Not connected");
+        	area.setAreaReadiness(Readiness.Disconnected);
+    		return;
+    	}
+    	if(area.getAreaReadiness() != Readiness.Ready){
+    		return;
+    	}
+
+        // this will not affect branch tree structure
+        if(!addJumpsAndHeadsToGraph(dwg.getOptionsRoot(), area.getAreaBody())){
+            logger.info("-validateArea->Cannot add heads/jumps");
+        	area.setAreaReadiness(Readiness.NotReady);
+        	return;
+        }
+
+ //       logger.debug("Graph:" + area.getAreaBody().getPipeGraph());
+
+    	// Aggregate head count and store it in branch nodes.
+        calcBranchDiameters(dwg.getOptionsRoot(), area.getAreaBody());
+
+        // Verify angles and insert shapes into fittings.
+        // Labels attachment point on each pipe
+        // Check for raiser and heads at branch ends.
+    	if(!setupFittings(dwg.getOptionsRoot(), area.getAreaBody())){
+        	area.setAreaReadiness(Readiness.NotReady);
+            logger.info("-validateArea->Unable to set up fittings");
+        	return; // no fittings
+    	}
+        if(area.getAreaBody().getRaiser() == null){
+        	area.setAreaReadiness(Readiness.NoRaiser);
+            logger.info("-validateArea->No raiser");
+        	return; // no raiser
+        }
+        // the entities starts/ends are arranged correctly
+        area.getAreaBody().orderEdges();
+
+        // Subdivide main and create remaining pipe fittings (error?)
+        Readiness ready = subdividePipes(dwg, area);
+        if(ready != Readiness.Ready){
+        	area.setAreaReadiness(ready);
+        	logger.info("-validateArea->Cannot subdivide:" + ready);
+        	return;
+        }
+
+        //   add spans and summary takeout to each pipe
+        calcMainTakout(dwg, area);
+        calcThreadTakout(dwg,area.getAreaBody());
+    	area.getAreaBody().calcSpan();
+    	this.correctMainSpan(dwg, area.getAreaBody());
+
+    	area.setAreaReadiness(Readiness.Ready);
+    	area.setDefectCount(area.getAreaBody().getProblemPointCount());
+
+        logger.info("-validateArea");
+    	}catch(Exception t){
+    		logger.error("Validation Failed", t);
+    		throw new IllegalArgumentException("Validation Failed");
+
+    	}
+    }
+    
+    public void buildCutSheetReport(final FloorDrawing dwg, final DrawingArea area){
+		try{
+		    	numberEdges(dwg, area);
+		    	area.countEdgeMultiplicity();
+		    	area.getAreaCutSheet().orderCutSheet();
+		}catch(Exception e){
+			logger.error("Failed to build report", e);
+			throw new IllegalStateException("Failed to build report");
+		}
+    }
+
+    /**
+     * Performs post-deserialization init of the layers and area entities.
+     * <ul>
+     * <li>Sets default values for hole diameters in layers which do not have them</li>
+     * <li>Removes non-structure entities; removes and reports zero-length pipes</li>
+     * </ul>
+
+     * @param dwg
+     * @param area
+     */
+    protected void prepareArea(final FloorDrawing dwg, final AreaBody areaBody){
+        logger.info("+prepareArea");
+        /*
+		for(DrawingLayer layer : dwg.getOptionsRoot().getLayer()){
+			if(layer.getHoleDiameter() == null && layer.getType() == Designation.Main){
+				Diameter md = layer.getMainDiameter();
+				TakeoutInfo info = takeout.takeoutInfo(md);
+				Diameter hd = info.getDrillLimit();
+				layer.setHoleDiameter(hd);
+			}
+		}
+		*/
+		List<DwgEntity> ignorable = new ArrayList<DwgEntity>();
+		
+    	for(DwgEntity e : areaBody.getDwgEntity()){
+    	    e.setLayer(dwg.getOptionsRoot().findLayer(e.getLy()));
+			if(!e.isStructure()){
+				ignorable.add(e);
+			}
+        }
+    	areaBody.getDwgEntity().removeAll(ignorable);
+        logger.info("-prepareArea");
+	}
+
+    /**
+     * Scans an area body entities and builds the area Point Map from all their ends.
+     * Ends close within tolerance are snapped together.
+     * Verifies that point entities of different type do not overlap.
+     * @param areaBody
+     * @return <code>true</code> if there is no overlap
+     */
+   public boolean buildPointMap(final AreaBody areaBody){
+       logger.info("+buildPointMap");
+	   boolean ret = true;
+	//    Map<DwgPoint, PointInfo> infoMap = areaBody.getPointMap();
+	   areaBody.getPointMap().clear();
+    	for(DwgEntity e : areaBody.getDwgEntity()){
+    		for(int i = 0; i < 2; i++){
+    			DwgPoint newPoint = i == 0 ? e.getEntStart() : e.getEntEnd();
+    			if(newPoint != null){
+    				DwgPoint match = null;
+    		        for(DwgPoint p : areaBody.getPointMap().keySet()){
+    			        if(planeGeo.pointOnPoint(newPoint, p)){
+    			        	match = p;
+    			        	break;
+    			        }
+    		        }
+    		        if(match == null){
+    		        	match = newPoint;
+    		        }else{
+    		        	// correct entity end-point
+    		        	if(i == 0){
+    		        		e.setEntStart(match);
+    		        	}else{
+    		        		e.setEntEnd(match);
+    		        	}
+    		        }
+    		        PointInfo info = areaBody.getPointInfo(match);
+		            if(e.getCls() == AcClass.AcDbArc){
+		            	info.getJumps().add(e);
+		            }else if(e.getCls() == AcClass.AcDbCircle){
+		            	info.getHeads().add(e);
+		            }else if(e.getCls() == AcClass.AcDbPoint){
+		            	info.getCouplings().add(e);
+		            }else if(e.getCls() == AcClass.AcDbBlockReference){
+		            	info.getBlocks().add(e);
+		            }
+    				// check homogenity
+    				if((info.getHead() == null ? 0 : 1)
+    						+ (info.getBlock() == null ? 0 : 1)
+    						+ (info.getJump() == null ? 0 : 1)
+    						+ (info.getCoupling() == null ? 0 : 1) > 1){
+    					info.setStatus(Defect.overlapingSymbols);
+    					ret = false;
+    				}
+                    if(info.getBlock() != null){
+                    	if(!pipeConfig.isKnownBlockName(info.getBlock().getName())){
+        					info.setStatus(Defect.unknownBlock);
+                    		ret = false;
+                    	}
+                    }
+    			}
+    		}
+    	}
+        logger.info("-buildPointMap->" + ret);
+    	return ret;
+   }
+   /**
+    * Create preliminary pipe graph by analyzing edge entities.
+    * This graph will have have only one fitting at a point.
+    * Two fittings form an edge if there is a segment entity containing both
+    * and without any point in-between them.
+    * @param areaBody
+    */
+   public boolean buildEdgeGraph(final DrawingOptions opt, final AreaBody areaBody){
+       logger.info("+buildEdgeGraph");
+   	Set<DwgPoint> pointSet = areaBody.getPointMap().keySet();
+
+		SortedMap<Double, DwgPoint> cutMap = new TreeMap<Double, DwgPoint>();
+	   	for(DwgEntity e : areaBody.getDwgEntity()){
+	   		if(e.getEntEnd() == null){
+	   			continue; // skip point entities
+	   		}
+	   		DwgPoint start = e.getEntStart();
+	   		DwgPoint end = e.getEntEnd();
+	   		if(start == end){
+	   			PointInfo info = areaBody.getPointInfo(start);
+	   			info.setStatus(Defect.zeroLengthPipe);
+	   			continue;
+	   		}
+            cutMap.clear();
+	   		for(DwgPoint p : pointSet){
+	   			if(p == start || p == end){
+	   				continue; // skip incidences at the extremities
+	   			}
+	   			if(planeGeo.pointOnSegment(p, start, end)){
+	   				cutMap.put(PlaneGeo.distance(start, p), p);
+	   			}
+	   		}
+
+			DwgPoint last = e.getEntStart();
+			for(DwgPoint next : cutMap.values()){
+	   			addSegmentToPipeGraph(opt, areaBody, e, last, next);
+	   			last = next;
+			}
+			addSegmentToPipeGraph(opt, areaBody, e, last, e.getEntEnd());
+    	}
+       logger.info("-buildEdgeGraph");
+   	   return areaBody.orderBranchPipes();
+   }
+
+   private void addSegmentToPipeGraph(final DrawingOptions opt, final AreaBody areaBody, final DwgEntity e, final DwgPoint start, final DwgPoint end){
+		Pipe pipe = new Pipe();
+		String name = e.getLy();
+		DrawingLayer layer = opt.findLayer(name);
+		pipe.setDesignation(layer.getType());
+		pipe.setLayerName(layer.getName());
+		if(pipe.getDesignation() == Designation.Main){
+			pipe.setDiameter(layer.getMainDiameter());
+		}
+		areaBody.addPipeToGraph(pipe, start, end);
+	}
+
+    private boolean addJumpsAndHeadsToGraph(final DrawingOptions opt, final AreaBody areaBody){
+        logger.info("+addJumpsAndHeadsToGraph");
+    	boolean ret = true;
+    	boolean sink = false;
+        for(DwgPoint p : areaBody.getPointMap().keySet()){
+        	PointInfo pInfo = areaBody.getPointInfo(p);
+        	if(pInfo.getFittings().isEmpty()){
+        		pInfo.setStatus(Defect.isolatedPoint);
+        		continue;
+        	}
+        	PipeFitting pf = pInfo.getFittings().get(0);
+        	boolean isHead = false;
+        	if(pInfo.getHead() != null){
+        		isHead = true;
+        	}else if(pInfo.getBlock() != null){
+        		if(pipeConfig.lookupHeadTemplate(pInfo.getBlock().getName()) != null){
+        			isHead = true;
+        		}
+        	}
+        	if(isHead){
+        		if(!sink){
+                    areaBody.getPipeGraph().addVertex(PipeFitting.SINK);
+                    sink = true;
+        		}
+        		addHeadToPipeGraph(areaBody, pf);
+        	}else if(pInfo.getJump() != null){
+        		if(!addJumpToPipeGraph(opt, areaBody, pf)){
+        			ret = false;
+        		}
+        	}
+        }
+        logger.info("-addJumpsAndHeadsToGraph");
+        return ret;
+    }
+    private void addHeadToPipeGraph(final AreaBody areaBody, final PipeFitting pf){
+		PointInfo pInfo = areaBody.getPointInfo(pf.getCenter());
+		Pipe pipe = null;
+		if(pInfo.getBlock() != null){
+			Pipe template = pipeConfig.lookupHeadTemplate(pInfo.getBlock().getName());
+			pipe = template.clone();
+		}else{
+			pipe = new Pipe(Designation.Head);
+	        pipe.setDiameter(takeout.getHeadDiameter());
+	        pipe.setVertical(true);
+		}
+        areaBody.getPipeGraph().addEdge(pf, PipeFitting.SINK, pipe);
+    }
+    private boolean addJumpToPipeGraph(final DrawingOptions drawingOptions, final AreaBody areaBody, final PipeFitting pf){
+		UndirectedGraph<PipeFitting, Pipe> graph = areaBody.getPipeGraph();
+		PointInfo pInfo = areaBody.getPointInfo(pf.getCenter());
+		List<Set<Pipe>> ps = paralleSets(areaBody, pf, pInfo);
+		if(ps == null){
+			return false;
+		}
+        if(ps.get(0).size() > 2){
+        	pInfo.setStatus(Defect.pipeOverlap);
+        	return false;
+        }
+
+        if(ps.size() == 1){
+        	if(ps.get(0).size() == 1){
+        		return true; // ignore jumps at ends
+        	}
+            // ignore parallelism by splitting this 2-pipe bucket
+        	Set<Pipe> set = new HashSet<Pipe>();
+        	Pipe pipe = ps.get(0).iterator().next();
+        	ps.get(0).remove(pipe);
+        	set.add(pipe);
+            ps.add(set);
+        }
+        // reorder parallel sets main first
+       	PipeCollectionComparator comp = getPipeCollectionComparator();
+       	comp.setDrawingOptions(drawingOptions);
+       	comp.setAscending(false);
+       	Collections.sort(ps, comp);
+
+        // remove this vertex and all edges
+        // iterate over parallel set
+        Pipe lastJump = null;
+        PipeFitting lastFitting = null;
+        pInfo.getFittings().clear();
+        for(int i = 0; i < ps.size(); i++){
+        	PipeFitting jpf = pf.clone();
+        	pInfo.getFittings().add(jpf);
+        	graph.addVertex(jpf);
+        	Pipe jPipe = null;
+        	if(i < ps.size() - 1){
+        		DrawingLayer layer = comp.selectLayer(ps.get(i+ 1));
+        		jPipe = new Pipe();
+        		jPipe.setVertical(true);
+        		jPipe.setLayerName(layer.getName());
+        		jPipe.setDesignation(layer.getType());
+        		if(layer.getType() == Designation.Main){
+        			jPipe.setDiameter(layer.getMainDiameter());
+        		}
+        	}
+        	// Re-wire edges in this set from pf to the newly created fitting.
+        	// Make sure not to reverse pipe ordering while doing this.
+        	for(Pipe pipe : ps.get(i)){
+        	   PipeFitting opposite = Graphs.getOppositeVertex(graph, pipe, pf);
+        	   boolean oppositeIsGraphTarget = opposite == graph.getEdgeTarget(pipe);
+        	   graph.removeEdge(pipe);
+        	   if(oppositeIsGraphTarget){
+        	     graph.addEdge(jpf, opposite, pipe);
+        	   }else{
+          	     graph.addEdge(opposite, jpf, pipe);
+        	   }
+        	}
+        	if(lastJump != null){
+        		graph.addEdge(jpf, lastFitting, lastJump);
+        	}
+        	lastJump = jPipe;
+        	lastFitting = jpf;
+        }
+        graph.removeVertex(pf);
+        return true;
+    }
+
+   /**
+    * Finds groups of parallel entities and orders them descending by cardinality and then by max diameter for the group.
+    * @param the entities analyzed
+    * @return the ordered groups
+    */
+   private List<Set<Pipe>> paralleSets(final AreaBody areaBody, final PipeFitting pFitting, final PointInfo pInfo){
+   	Collection<Pipe> entities = areaBody.getPipeGraph().edgesOf(pFitting);
+   	UndirectedGraph<Pipe, DefaultEdge> pg = getParallelGraph();
+   	GraphUtils.clearGraph(pg);
+   	
+   	Set<Pipe> vs = getVerticalSet();
+   	vs.clear();
+   	Set<Pipe> sS = getSidewallSet();
+   	sS.clear();
+   	// add all vertices
+   	for(Pipe e : entities){
+   		if(e.isVertical()){
+   			vs.add(e);
+   		}else if(e.getDesignation() == Designation.Head){
+   			sS.add(e);
+   		}else{
+   		    pg.addVertex(e);
+   		}
+   	}
+   	// iterate over all distinct pairs and make edges from parallel ones
+   	List<Pipe> entList = getParallelEntityList();
+   	entList.clear();
+   	entList.addAll(pg.vertexSet());
+   	for(int i = 0; i < entList.size(); i++){
+   		Pipe e1 = entList.get(i);
+   		for(int j = i + 1; j < entList.size(); j++){
+   			Pipe e2 = entList.get(j);
+   			if(atAngle(areaBody, e1, e2, Math.PI)){
+   				pg.addEdge(e1, e2);
+   			}
+   		}
+   	}
+   	ConnectivityInspector<Pipe, DefaultEdge> ci
+	        = new ConnectivityInspector<Pipe, DefaultEdge>(pg);
+    List<Set<Pipe>> ret = ci.connectedSets();
+    if(!vs.isEmpty()){
+        ret.add(vs);
+    }
+    if(!sS.isEmpty()){
+    	if(ret.size() == 1 && sS.size() == 1){
+    		if(ret.get(0).size() == 1){
+    			ret.get(0).addAll(sS);
+    		}else{
+    			ret.add(sS);
+    		}
+    	}else{
+    		pInfo.setStatus(Defect.wrongSidewallLocation);
+    		return null;
+    	}
+    }
+
+   	Comparator<Collection<Pipe>> comp =  getPipeSetCollectionComparator2();
+   	Collections.sort(ret, comp);
+
+   	return ret;
+   }
+
+   /**
+    * Checks if 2 entities form an expected angle.
+    * Assumes that the entities have a point in common.
+    * The angle is unsigned so the order in which entities are passed is irrelevant.
+    * @param e1 first entity
+    * @param e2 second entity
+    * @param ang expected angle between 0 and Math.PI
+    * @return <code>true</code> if the formed angle has expected value (within tolerance)
+    */
+   protected boolean atAngle(final AreaBody areaBody, final Pipe e1, final Pipe e2, final double ang){
+	double ang12;
+	if(e1.isVertical() != e2.isVertical()){
+    	ang12 = Math.PI*0.5;
+    }else if(e1.isVertical()){
+    	ang12 = Math.PI;
+    }else{
+	   PipeFitting[] tripple = getPipeFittingTripple();
+   	   if(!GraphUtils.tripple(areaBody.getPipeGraph(), e1, e2, tripple)){
+   		  throw new IllegalArgumentException("Compared segments have no points in common");
+   	    }
+		ang12 = PlaneGeo.angleMeasure(tripple);
+    }
+	return Math.abs(ang - ang12) < planeGeo.getAngularTolerance();
+   }
+   
+   /**
+    * Tries to find a single main layer which applies to all pipes in set
+    * @param opt drawing options
+    * @param ps set containing one pipe or 2 parallel pipes
+    * @param mainLayerSet output set. Will be empty for branch set. More then one layers here indicates an error.
+    * This will happen on groove/thread mismatch or vendor mismatch in grooved case.
+    * Mismatch is checked only when diameters are equal.
+    * @return flag which indicates if the layer can stay in one-piece (pure main with same name)
+    */
+   private boolean getMainLayerForParSet(final DrawingOptions opt, final Set<Pipe> ps,
+		   Set<DrawingLayer> mainLayerSet){
+	   boolean ret = false;
+	   mainLayerSet.clear();
+	   for(Pipe pipe : ps){
+	   		if(pipe.getDesignation() != Designation.Main){
+	   			continue;
+	   		}
+   			DrawingLayer layer =  opt.findLayer(pipe.getLayerName());
+   			if(mainLayerSet.isEmpty()){
+   				mainLayerSet.add(layer);
+   			}else{
+	   			// 2 main layers present
+   				DrawingLayer firstLayer = mainLayerSet.iterator().next();
+   				int cmp = firstLayer.getMainDiameter().compareTo(layer.getMainDiameter());
+   				if(cmp < 0){
+   					// second is wider - use it instead
+   					mainLayerSet.clear();
+   					mainLayerSet.add(layer);
+   				}else if(cmp == 0){
+   					if(layer.getName().equals(firstLayer.getName())){
+   	   					ret = true; // same name - can stay in one-piece
+   	   					break;
+   	   				}
+  					// same diameter different name
+   					Attachment attachment = layer.getSubType();
+   					if(attachment == Attachment.weldedGroove){
+   						attachment = Attachment.grooved;
+   					}else if(attachment == Attachment.welded){
+   						attachment = Attachment.threaded;
+   					}
+   					Attachment firstAttachment = firstLayer.getSubType();
+   					if(firstAttachment == Attachment.weldedGroove){
+   						firstAttachment = Attachment.grooved;
+   					}else if(firstAttachment == Attachment.welded){
+   						firstAttachment = Attachment.threaded;
+   					}
+   					if(attachment != firstAttachment ||
+   								attachment == Attachment.grooved && layer.getVendor() != firstLayer.getVendor()){
+   						mainLayerSet.add(layer); // mismatch on type of vendor
+   					}
+   				}
+   				// else - 1st is wider and wins
+	   		}
+	   }
+	   return ret;
+   }
+
+   /**
+    * Finds all main, non-threaded layers meeting at a vertex
+    * which are of maximal diameter.
+    * If horizontals are present then verticals are excluded from comparison.
+    * @param opt drawing options
+    * @param areaBody body of the drawing
+    * @param pf the vertex
+    * @param maxLayerSet the layers
+    */
+   private void getMaxLayers(final DrawingOptions opt, final AreaBody areaBody, final PipeFitting pf,
+		   Set<DrawingLayer> maxLayerSet){
+	   maxLayerSet.clear();
+       Pipe maxDiameterPipe = null;
+   	   for(Pipe pipe : areaBody.getPipeGraph().edgesOf(pf)){
+   		if(pipe.getDesignation() != Designation.Main){
+   			continue;
+   		}
+	    DrawingLayer layer = opt.findLayer(pipe.getLayerName());
+	    if(layer.getSubType() == Attachment.threaded){
+	    	continue;
+	    }
+	    if(layer.getSubType() == Attachment.grooved
+	    		|| layer.getSubType() == Attachment.welded){
+	    	int comp;
+	    	if(maxDiameterPipe == null){
+	    		comp = 1; // first is always max
+	    	}else{
+	    		// comparing differently positioned - horizontal always wins
+	    		if(maxDiameterPipe.isVertical() && !pipe.isVertical()){
+	    			comp = 1;
+	    		}else if(!maxDiameterPipe.isVertical() && pipe.isVertical()){
+	    			comp = -1;
+	    		}else{
+	    			comp = pipe.getDiameter().compareTo(maxDiameterPipe.getDiameter());
+	    		}
+	    	}
+   		    if(comp > 0){
+   		    	maxDiameterPipe = pipe;
+   		    	maxLayerSet.clear();
+   		    }
+   		    if(comp >= 0){
+   		    	maxLayerSet.add(layer);
+   		    }
+		}
+   	}
+   }
+    private void  calcBranchDiameters(final DrawingOptions opt, final AreaBody areaBody){
+        areaBody.calcHeadCount();
+        for(Pipe b : areaBody.getPipesFor(Designation.Branch)){
+        	DrawingLayer layer = opt.findLayer(b.getLayerName());
+        	PipeFitting epf = areaBody.getEndFitting(b);
+        	PipeFitting spf = areaBody.getStartFitting(b);
+        	int hc = Math.min(spf.getHeadCount(), epf.getHeadCount());
+        	Diameter d = layer.getBranchDiameter(hc);
+        	b.setDiameter(d);
+        }
+    }
+    
+    // figures out fitting attachment type for a set of pipes
+    private Attachment determineAttachment(final DrawingOptions opt, List<Set<Pipe>> ps){
+    	if(!hasMain(ps.get(0))){
+    		return Attachment.threaded; // Branches are always threaded
+    	}
+    	boolean onePiece = false;
+		String commonName0 = commonMainName(ps.get(0));
+		Attachment layerType0 = (commonName0 == null) ? null : opt.findLayer(commonName0).getSubType();
+    	if(ps.size() == 2 && ps.get(0).size() == 2){     		// tee or cross on main (possible 1-piece)
+    		if(ps.get(1).size() == 2){ // cross
+    			if(maxDiameter(ps.get(0)) == maxDiameter(ps.get(1)) && hasMain(ps.get(1))){
+    		    	// If cross has same max diameters it may need to be swapped
+    				boolean swap = false;
+    				String commonName1 = commonMainName(ps.get(1));
+    				if(commonName0 == null && commonName1 != null){
+    	    	    	// make sure that a pair across and on the same layer is 1st on list
+    					swap = true;
+    				}else if(commonName0 != null && commonName1 != null){
+    	    			// make sure that if both pairs have common name then welded-type is 1st on list
+    					Attachment layerType1 = opt.findLayer(commonName1).getSubType();
+    	    			if(layerType0 != Attachment.welded && layerType0 != Attachment.weldedGroove
+    	    					&& (layerType1 == Attachment.welded || layerType1 != Attachment.weldedGroove)){
+    	    				swap = true;
+    	    			}
+    				}
+    	    		if(swap){
+    	    			Collections.swap(ps, 0, 1);
+    	    			commonName0 = commonName1;
+    	    			layerType0 = (commonName0 == null) ? null : opt.findLayer(commonName0).getSubType();
+    	    		}
+    			}
+    		}
+    		Diameter md0 = maxDiameter(ps.get(0));
+    		Diameter md1 = maxDiameter(ps.get(1));
+    		if(md0.compareTo(md1) >= 0){ // exclude bull-tee
+    			if(layerType0 == Attachment.welded || layerType0 == Attachment.weldedGroove){
+    				onePiece = true;
+    			}else if(layerType0 == Attachment.grooved){
+    				onePiece = this.getTakeout().isMechanicalAllowed(md0, md1);
+    			}
+    		}
+
+    	}
+    	Attachment ret = layerType0;
+    	if(onePiece){
+    		if(layerType0 == Attachment.grooved){
+    			ret = Attachment.mechanical;
+    		}else if(layerType0 == Attachment.weldedGroove){
+    			Attachment layerType1 = commonSubType(opt, ps.get(1));
+				if(layerType1 == Attachment.threaded){
+					ret =  Attachment.welded;
+				}
+    		}
+    	}else{ // pipe has to be cut
+    		if(layerType0 == Attachment.welded){
+    			ret = Attachment.threaded;
+    		}else if(layerType0 == Attachment.weldedGroove){
+    			ret =  Attachment.grooved;
+    		}
+    	} 	
+    	return ret;
+    }
+    
+    public boolean setupFittings(final DrawingOptions opt, final AreaBody areaBody){
+      logger.info("+setupFittings");
+      boolean ret = true;
+   	  Set<PipeFitting> ends = new HashSet<PipeFitting>();
+      List<Pipe> pipes = new ArrayList<Pipe>();
+
+      // order vertices with those attached to main first (excluding sink-vertex)
+   	  List<PipeFitting> mainFirst = new ArrayList<PipeFitting>();
+   	  mainFirst.addAll(areaBody.getPipeGraph().vertexSet());
+   	  mainFirst.remove(PipeFitting.SINK);
+   	  Collections.sort(mainFirst, new Comparator<PipeFitting>(){
+		@Override
+		public int compare(PipeFitting o1, PipeFitting o2) {
+			
+			boolean isMain1 = hasMain(areaBody.getPipeGraph().edgesOf(o1));
+			boolean isMain2 = hasMain(areaBody.getPipeGraph().edgesOf(o2));
+			if(isMain1 && !isMain2){
+				return -1;
+			}if(isMain2 && !isMain1){
+				return 1;
+			}
+			return 0;
+		}
+	});
+   	  
+
+      for(PipeFitting pf : mainFirst){
+          PointInfo pInfo = areaBody.getPointInfo(pf.getCenter());
+          
+          
+          Set<DrawingLayer> layers = getDrawingLayerSet();
+
+          List<Set<Pipe>> ps = paralleSets(areaBody, pf, pInfo); // group adjacent pipes into parallel sets, decreasing by #
+          if(ps == null){
+         	  logger.error("paralleSets returned null");
+        	  ret = false;
+        	  continue;
+          }
+          if(ps.get(0).size() > 2){ // cannot have more than 2 pipes in one set
+           	pInfo.setStatus(Defect.pipeOverlap);
+       		logger.error(Defect.pipeOverlap);
+           	ret = false;
+           	continue;
+          }
+          if(ps.size() > 2){ // cannot have more than 2 sets
+               	pInfo.setStatus(Defect.tooManyPipes);
+           		logger.error(Defect.tooManyPipes);
+               	ret = false;
+               	continue;
+          }
+          
+          // Try to figure out attachment and vendor
+   	      Type fittingType = null;
+   	      Attachment attachment = this.determineAttachment(opt, ps);
+   	      if(attachment == null){
+             	pInfo.setStatus(Defect.tooManyPipes);
+           		logger.error(Defect.tooManyPipes);
+               	ret = false;
+               	continue;
+   	      }
+   	      String maxName =  maxLayer(ps.get(0));
+   	      Vendor vendor = opt.findLayer(maxName).getVendor();
+   	      
+          
+   	      // determine shape
+          if(ps.size() == 2){ // anything other than coupling, cap, or raiser
+			Pipe p1 = ps.get(0).iterator().next();
+			Pipe p2 = ps.get(1).iterator().next();
+			if(p1.getDesignation() != Designation.Head
+					&& p2.getDesignation() != Designation.Head
+					&& !atAngle(areaBody, p1, p2, 0.5*Math.PI)){
+				// 2 directions not at right angle
+				// no need to check heads
+				if(ps.get(0).size() == 1){
+					if(atAngle(areaBody, p1, p2, 0.75*Math.PI)){
+						fittingType = Type.Ell45;
+					}
+				}
+				if(fittingType == null){
+					pInfo.setStatus(Defect.missingJump);
+	           		logger.error(Defect.missingJump);
+					ret = false;
+					continue;
+				}
+			}
+			// at right angle
+			if(fittingType == null){
+			  if(ps.get(0).size() == 1){
+			    fittingType = Type.Ell;
+			  }else if(ps.get(1).size() == 1){
+			    fittingType = Type.Tee;
+			  }else{
+			    fittingType = Type.Cross;
+			  }
+			}
+          }else{ // ps.size()==1
+           	  if(ps.get(0).size() == 1){
+             		// ignore ends - also report error for headless branch
+             		Pipe endPipe = ps.get(0).iterator().next();
+             		if(endPipe.getDesignation() == Designation.Branch){
+      	    		    pInfo.setStatus(Defect.missingHead);
+    	           		logger.error(Defect.missingHead);
+      	    		    ret = false;
+          	    		continue;
+             		}else{
+             			if(pInfo.getCoupling() == null && pInfo.getJump() == null){
+                          ends.add(pf);
+                          fittingType = Type.Raiser;
+             			}else{
+             			  fittingType = Type.Cap;
+             			}
+             		}
+             	}else{
+             		if(pInfo.getBlock() == null && pInfo.getCoupling() == null){
+      	    		    pInfo.setStatus(Defect.missingCoupling);
+    	           		logger.error(Defect.missingCoupling);
+      	    		    ret = false;
+          	    		continue;
+             		}
+             		fittingType = (pInfo.getBlock() != null)
+             		  && pipeConfig.isReducerBlock(pInfo.getBlock().getName()) ?
+             				Type.Reducer : Type.Coupling;
+             	}
+	      }
+          //List<Pipe> pipes = new ArrayList<Pipe>();
+          pipes.clear();
+          for(Set<Pipe> set : ps){
+              pipes.addAll(set);
+          }
+          setupOneFitting(areaBody, pf, fittingType, attachment, vendor, pipes);
+       }
+      
+      // check raiser count
+   	   if(ends.size() == 1){
+		 areaBody.setRaiser(ends.iterator().next());
+	   }else{
+		 areaBody.setRaiser(null);
+		 for(PipeFitting end : ends){
+			areaBody.getPointInfo(end.getCenter()).setStatus(Defect.possibleRaiser);
+		 }
+	   }
+       logger.info("-setupFittings->" + ret);
+       return ret;
+   }
+
+    private void setupOneFitting(final AreaBody areaBody, final PipeFitting pf, final Type fittingType,
+    		final Attachment attachment, final Vendor vendor, final List<Pipe> pipes){
+
+    	Diameter.orderDiametrisables(pipes);
+// preliminary attachment calculation
+/*
+    	Attachment attachment = (layer == null || layer.getType() == Designation.Branch) ? Attachment.threaded
+    			:  layer.getSubType();
+
+    	if(attachment == Attachment.welded){ 
+    		if(fittingType.getEndCount() != 3){
+    			attachment = Attachment.threaded; // weld main means threaded with threaded welds
+    		}
+    	} else if(attachment == Attachment.weldedGrove){ 
+    		if(fittingType.getEndCount() != 3){
+    			attachment = Attachment.grooved; // weldGrv main means grooved with grooved welds
+    		}else{
+    			// tee
+    			Diameter d0 = pipes.get(0).getDiameter();
+    			for(int i = 1; i < 3; i++){
+    				Diameter d  = pipes.get(i).getDiameter();
+    				if(d0.compareTo(d) != 0){
+    					attachment = Attachment.welded;
+    					break; 
+    				}
+    			}
+    		}
+    	} */
+/*
+    	if(attachment == Attachment.welded){ // verify if welded applies
+    			if(fittingType.getEndCount() < 3){
+    				attachment = Attachment.grooved; // not a tee or cross
+    			}else{
+    				// 2 max diam welded main ends in-line must be present
+    			    boolean isWelded = true;
+                	for(int i = 0; i < 2; i++){
+                        if(!layer.getName().equals(pipes.get(i).getLayerName())){
+                        	isWelded = false;
+                        	break;
+                        }
+                	}
+                	if(!isWelded && fittingType.getEndCount() == 4){
+                		isWelded = true;
+                    	for(int i = 2; i < 4; i++){
+                            if(!layer.getName().equals(pipes.get(i).getLayerName())){
+                            	isWelded = false;
+                            	break;
+                            }
+                    	}
+                	}
+                	if(!isWelded){
+                		attachment = Attachment.grooved;
+                	}
+    			}
+    	}
+*/
+   // 	Vendor vendor = layer == null ? null : layer.getVendor();
+    	Fitting fitting = fittingFactory.instanceOf(fittingType, attachment, vendor, pipes);
+    	logger.debug("Created fitting:" + fitting + " at " + pf.getCenter());
+        pf.setFitting(fitting);
+        for(int i = 0; i < pipes.size(); i++){
+            PipeAttachment pa = areaBody.getAttachmentToFitting(pipes.get(i), pf);
+            Direction direction = Direction.values()[i];
+            pa.setDirectionInFitting(direction);
+            BigDecimal tk = takeout.locateTakeout(fitting, direction);
+            pa.setTakeout(tk);
+            if(logger.isDebugEnabled()){
+            	Pipe p = pipes.get(i);
+            	String whichEnd = (areaBody.getStartFitting(p)==pf)? "Start" : "End";
+                logger.debug(direction + " attached to " + whichEnd + " of "
+                		+ p.getDiameter() + "-" + p.getDesignation() + " pipe, requires " + tk + " takeout");
+            }
+        }
+        return;
+    }
+
+   public static class PipeCollectionComparator implements Comparator<Collection<Pipe>> {
+	    private DrawingOptions drawingOptions;
+	    private int direction = 1;
+		@Override
+		public int compare(final Collection<Pipe> o1, final Collection<Pipe> o2) {
+			DrawingLayer layer1 = selectLayer(o1);
+			DrawingLayer layer2 = selectLayer(o2);
+			if(layer1.getType() == Designation.Branch
+					&& layer2.getType() == Designation.Branch){
+				return 0;
+			}
+			if(layer2.getType() == Designation.Branch){
+				return direction;
+			}
+			if(layer1.getType() == Designation.Branch){
+				return -direction;
+			}
+			int comp = layer1.getMainDiameter().compareTo(layer2.getMainDiameter());
+			if(comp != 0){
+				return comp*direction;
+			}
+			if(layer1.getSubType() == layer2.getSubType()){
+				return 0;
+			}
+			return direction * ((layer1.getSubType() == Attachment.grooved) ? 1 : -1);
+		}
+		/**
+		 * Selects a layer from a collection of pipes in the following order of preferences
+         * main over branch, higher diameter, grooved over threaded.
+		 * @param pipes the collection
+		 * @return the layer
+		 */
+		public DrawingLayer selectLayer(final Collection<Pipe> pipes){
+			DrawingLayer ret = null;
+			for(Pipe p : pipes){
+				if(p.getDesignation() == Designation.Head){
+					continue;
+				}
+				DrawingLayer pLayer = getLayer(p);
+				if(ret == null){
+					ret = pLayer; // always set something (even branch)
+				}else if(p.getDesignation() != Designation.Main){
+					continue; // subsequent branches are ignored
+				}else{ // main
+					if(ret.getType() == Designation.Branch){
+						ret = pLayer;
+						continue; // main over branch
+					}
+					int comp = pLayer.getMainDiameter().compareTo(ret.getMainDiameter());
+					if(comp > 0){
+						ret = pLayer;
+					}else if(comp == 0){
+						if(pLayer.getSubType() == Attachment.grooved){
+							ret = pLayer;
+						}
+					}
+				}
+			}
+			return ret;
+		}
+		private DrawingLayer getLayer(final Pipe p){
+			return drawingOptions.findLayer(p.getLayerName());
+		}
+		public DrawingOptions getDrawingOptions() {
+			return drawingOptions;
+		}
+		public void setDrawingOptions(final DrawingOptions drawingOptions) {
+			this.drawingOptions = drawingOptions;
+		}
+        public void setAscending(final boolean ascending){
+        	direction = ascending ? 1 : -1;
+        }
+        public boolean isAscending(){
+        	return direction == 1;
+        }
+	}
+   /**
+    * Iterates over ordered edges list and calculates the numeric ids
+    * for the main pipes and for the branches. The ids are set on the list
+    * and a branch map is created in the CutSheet sub-object.
+    * @param dwg the drawing
+    * @param area the ares
+    */
+   private void numberEdges(final FloorDrawing dwg,
+		   final DrawingArea area){
+       logger.info("+numberEdges");
+    AreaBody areaBody = area.getAreaBody();
+   	double ignoreSize = //dwg.getOptionsRoot().getShortPipe();
+   		area.getAreaOptions().getShortPipe().doubleValue();
+   	int branchNumber = -1; // initialized to compile - otherwise should not be used
+    int ignoreNumber = -1;
+   	int mainNumber = area.getAreaOptions().getMainStartNo() == null ? 1 : area.getAreaOptions().getMainStartNo();
+   	Map<Integer, Pipe> branchLookup = new HashMap<Integer, Pipe>();
+	List<Pipe> chain = new ArrayList<Pipe>();
+   	for(Pipe e : areaBody.getEdgesInOrder()){
+		PipeFitting source = areaBody.getStartFitting(e);
+   		if(e.getDesignation() == Designation.Main){
+   			if(!areaBody.isInitialGroovedPipe(e)){
+   				continue;
+   			}
+   			Pipe nextMain = e;
+   			boolean isIgnored = e.isIgnored();
+   			chain.clear();
+   			chain.add(e);
+   			while(!areaBody.isTerminalGroovedPipe(nextMain)){
+   				PipeFitting nextEnd = areaBody.getEndFitting(nextMain);
+   		        Direction endDirection = nextMain.getEndAttachment().getDirectionInFitting();
+   		       	Direction oppositeDirection = nextEnd.getFitting().getType().antipode(endDirection);
+   		       	nextMain = areaBody.getPipe(nextEnd, oppositeDirection);
+                if(!nextMain.isIgnored()){
+                	isIgnored = false;
+                }
+                chain.add(nextMain);
+   		    }
+   			if(!isIgnored){
+   				for(Pipe p : chain){
+   					p.setId(mainNumber);
+   				}
+   				mainNumber++;
+   			}else{
+   				for(Pipe p : chain){
+   					p.setId(ignoreNumber);
+   				}
+   				ignoreNumber--;
+   			}
+   			// treaded cut-sheet report
+   			DrawingLayer dl = dwg.getOptionsRoot().findLayer(e.getLayerName());
+   			if(dl != null && dl.getSubType() == Attachment.threaded){
+   				CutSheetInfo cs = area.cutSheetInfoForPipe(e);
+   				area.getAreaCutSheet().getMainThreadedList().add(cs);
+   			}
+   		}else{
+   			// branch cut-sheet report
+   			if(isIgnoredBranch(areaBody, e, ignoreSize)){
+   				e.setIgnored(true);
+   				continue;
+   			}
+   			if(areaBody.isOnMain(source)){
+   				branchNumber = calcBranchNumber(area, e, branchLookup);
+   				branchLookup.put(branchNumber, e);
+   			}
+   			e.setId(branchNumber);
+   		}
+   	}
+       logger.info("-numberEdges");
+   }
+   /**
+    * Creates an entry in the cut-sheet Branch Map.
+    * Determines branch number for the next branch start encountered in the iteration.
+    * If the next branch matches one already in the branch map then its number is used
+    * and the multiplicity counter is incremented. Otherwise a new entry in
+    * the branch map is created with the branch number which is higher by one
+    * than the highest existing one.
+    * 2 Branches are considered equal if they have the same attachment type
+    * to the main and if their shapes are metrically equivalent
+    * (see AreaBody.branchStartsEqual for details)
+    * @param area the area
+    * @param e the next branch start
+    * @param branchLookup all branch starts visited so far - indexed by branch number
+    * @return the calculated branch number
+    */
+   private int calcBranchNumber(final DrawingArea area, final Pipe e, final Map<Integer, Pipe> branchLookup){
+   	AreaBody areaBody = area.getAreaBody();
+   	AreaCutSheet cutSheet = area.getAreaCutSheet();
+   	int branchNumber;
+   	BranchInfo info;
+   	PipeFitting startPt = areaBody.getStartFitting(e);
+
+   	for(Map.Entry<Integer, BranchInfo> entry : cutSheet.getBranchMap().entrySet()){
+       	branchNumber = entry.getKey();
+       	info = entry.getValue();
+       	Pipe brStart = info.getOrigin();
+       	PipeFitting brStartPt = areaBody.getStartFitting(brStart);
+       	if( !startPt.getFitting().getAttachment().equals(
+       			brStartPt.getFitting().getAttachment())){
+       		continue; // mismatch on start attachment type
+       	}
+       	Pipe sampleBranchStart = branchLookup.get(branchNumber);
+       	if(areaBody.branchStartsEqual(e, sampleBranchStart)){
+
+       		info.setMultiplicity(info.getMultiplicity() + 1);
+       		return branchNumber;
+       	}
+       }
+   	// no match found
+   	SortedMap<Integer, BranchInfo> branchMap = cutSheet.getBranchMap();
+   	if(branchMap.isEmpty()){
+   		branchNumber = area.getAreaOptions().getBranchStartNo() == null ? 1 : area.getAreaOptions().getBranchStartNo();
+   	}else{
+   	    branchNumber = branchMap.lastKey().intValue() + 1;
+   	}
+   	info = new BranchInfo();
+   	info.setMultiplicity(1);
+   	info.setOrigin(e);
+   	cutSheet.getBranchMap().put(branchNumber, info);
+   	return branchNumber;
+   }
+
+   /**
+    * Tests if a branch pipe is ignored, i.e.,
+    * is short and either is a leaf or is followed by short leafs.
+    * @param areaBody area containing the tested pipe
+    * @param e the tested pipe
+    * @param ignoreSize defines what short means
+    * @return <code>true</code> if it is
+    */
+   private boolean isIgnoredBranch(final AreaBody areaBody, final Pipe e, final double ignoreSize){
+   	PipeFitting target = areaBody.getEndFitting(e); //e.getEntEnd();//areaBody.getPointGraph().getEdgeTarget(e);
+   	PipeFitting source = areaBody.getStartFitting(e);//areaBody.getPointGraph().getEdgeSource(e);
+   	if(PlaneGeo.distance(source, target) > ignoreSize){
+   		return false; // this is not short
+   	}
+   	for(Pipe e2 : areaBody.getPipeGraph().edgesOf(target)){
+   		if(e2.getDesignation() == Designation.Branch &&  e2 != e){
+   	    	PipeFitting target2 = areaBody.getEndFitting(e2);//e2.getEntEnd();//areaBody.getPointGraph().getEdgeTarget(e2);
+   	    	if(areaBody.degreeOf(target2) > 1){
+   	    		return false; // follower is not leaf
+   	    	}
+   	    	if(PlaneGeo.distance(target, target2) > ignoreSize){
+   	    		return false; // follower is not short
+   	    	}
+   		}
+   	}
+   	return true;
+   }
+
+/**
+ * Breaks and inserts couplings for long pipes in an area of a drawing.
+ * Will do it only if treaded/grooved cut sizes are present.
+ * @param dwg the drawing
+ * @param areaBody the area
+ */
+   private Readiness subdividePipes(final FloorDrawing dwg, final DrawingArea area){
+       logger.info("+subdividePipes");
+       AreaBody areaBody = area.getAreaBody();
+       Readiness ret = Readiness.Ready;
+       // collect cutting options
+       AreaOptions options = // dwg.getOptionsRoot();
+       		area.getAreaOptions();
+       List<Long> threadedSizes = options.getBranchCutList();
+       List<Long> groovedSizes = options.getMainCutList();
+       Long longPipe = options.getLongPipe();
+       Long shortPipe = options.getShortPipe();
+       Long cutSpace = options.getMainCutSpace();
+       if(threadedSizes == null || groovedSizes == null || longPipe == null || shortPipe == null || cutSpace == null){
+    	   ret = Readiness.BadLengthOptionFormat;
+       }else{
+	       if(threadedSizes.size() > 0){
+	    	   subdivideThreaded(dwg, area);
+	       }
+	       if(groovedSizes.size() > 0){
+	    	   ret = subdivideMain(dwg, area);
+	       }
+       }
+       logger.info("-subdividePipes->" + ret);
+       return ret;
+    }
+
+   /**
+    * Checks if a pipe continues (un-broken) beyond its start vertex.
+    * @param areaBody the area
+    * @param pipe the pipe
+    * @return <code>true</code> if it does not continue
+    *
+   private boolean isInitialGroovedPipe(final AreaBody areaBody, final Pipe pipe){
+       return isExtremeGroovedPipe(areaBody, pipe, areaBody.getStartFitting(pipe));
+    }*/
+/**
+ * Checks if a pipe continues (un-broken) beyond its end vertex.
+ * @param areaBody the area
+ * @param pipe the pipe
+ * @return <code>true</code> if it does not continue
+ *
+    private boolean isTerminalGroovedPipe(final AreaBody areaBody, final Pipe pipe){
+	       return isExtremeGroovedPipe(areaBody, pipe, areaBody.getEndFitting(pipe));
+	}*/
+   
+	/**
+	 * Checks if a pipe continues (un-broken) beyond one of its extreme vertices.
+	 * @param areaBody the area
+	 * @param pipe the pipe
+	 * @param pf the vertex
+	 * @return <code>true</code> if it does not continue
+	 *
+    private boolean isExtremeGroovedPipe(final AreaBody areaBody, final Pipe pipe, final PipeFitting pf){
+		 PipeFitting startPf = areaBody.getStartFitting(pipe);
+		 Fitting f = pf.getFitting();
+         if(!f.isHoleBased()){
+        	 return true;
+         }
+         // mechanical or welded.
+         // find how is 'pipe' attached to fitting 'f'.
+         // If 'tee' or cross with different diameters then main run will be E-W
+         PipeAttachment pa = (pf == startPf) ? pipe.getStartAttachment()
+        		 : pipe.getEndAttachment();
+		 Direction pd = pa.getDirectionInFitting();
+         if(f.getType().getEndCount() == 3
+        		 || f.getDiameterList().size() > 1){
+        	 return !pd.equalOrOpposite(Direction.E);
+         }
+         // must be welded cross with equal diameters.
+         // we just need a way to choose main-run.
+         // find first incoming(?)
+         int firstIndex = areaBody.getEdgesInOrder().size();
+         Direction firstDirection = null;
+         for(Direction d : f.getType().getDirections()){
+        	 Pipe p = areaBody.getPipe(pf, d);
+        	 PipeFitting end = areaBody.getEndFitting(p);
+        	 if(end != pf){
+        		 continue;
+        	 }
+        	 // incoming
+        	 int index = areaBody.getEdgesInOrder().indexOf(p);
+        	 if(index < firstIndex){
+        		 firstIndex = index;
+        		 firstDirection = d;
+        	 }
+         }
+    	 return !pd.equalOrOpposite(firstDirection);
+    }*/
+/*
+   private void subdivideOneTreaded(final DrawingOptions options, final AreaBody areaBody, final Pipe bp, final double maxSize, final double cutSize){
+ //      logger.info("+subdivideOneTreaded(" + bp + ")");
+       PipeFitting start = areaBody.getStartFitting(bp);
+       PipeFitting end = areaBody.getEndFitting(bp);
+       List<Point> cuts = getThreadCutList();
+       planeGeo.subdivide(DwgPoint.class, start, end, maxSize, cutSize, cuts);
+       if(cuts.isEmpty()){
+ //          logger.info("+subdivideOneTreaded->No cuts");
+           return; // nothing to do
+       }
+       List<PipeFitting> breakups = areaBody.subdivideGraph(bp, cuts);
+       updateBreakups(options, areaBody, bp, start, end, breakups);
+//       logger.info("-subdivideOneTreaded->" + cuts.size() + " cuts");
+   }
+   */
+   /*
+    * Adjust locations of vertices on a grooved chain so that linear distances
+    * from the start point are whole numbers.
+    * @param start start of the chain
+    * @param end end of the chain
+    * @param avoids vertices on the chain
+    *
+   private void alignAvoids(PipeFitting start, PipeFitting end, List<PipeFitting> avoids){
+	   // create unit vector for the segment we divide
+	   double[] u = PlaneGeo.difference(end, start);
+	   PlaneGeo.streachInPlace(u, 1.0/PlaneGeo.norm(u));
+	   for(PipeFitting avoid : avoids){
+		   long dist = Math.round(PlaneGeo.distance(start, avoid));
+		   double x = start.x(0) + u[0]*dist;
+		   double y = start.x(1) + u[1]*dist;
+		   avoid.getCenter().setX(x);
+		   avoid.getCenter().setY(y);
+	   }
+   }*/
+   /*
+    * Subdivide one grooved pipe.
+    * This operation assumes that between-holes pieces of a grooved pipe are ordered consistently.
+    * @param areaBody
+    * @param m
+    * @param maxPipe
+    * @param sizes
+    * @param margin
+    *
+   private boolean subdivideOneGrooved(final DrawingOptions options, final AreaBody areaBody, final Pipe m, final double maxPipe, final Collection<Double> sizes, final double margin){
+       logger.info("+subdivideOneGrooved(" + m + ")");
+       boolean ret = true;
+       PipeFitting trueEndFitting = areaBody.getEndFitting(m);
+       List<PipeFitting> avoids = getAvoidedPoints();
+       avoids.clear();
+       List<Pipe> subs = getPipeSubdivision();
+       subs.clear();
+       subs.add(m);
+       Pipe next = m;
+       while(!areaBody.isTerminalGroovedPipe(next)){
+       	avoids.add( trueEndFitting);
+        Direction endDirection = next.getEndAttachment().getDirectionInFitting();
+       	Direction oppositeDirection = trueEndFitting.getFitting().getType().antipode(endDirection);
+       	next = areaBody.getPipe(trueEndFitting, oppositeDirection);
+       	subs.add(next);
+       	trueEndFitting = areaBody.getEndFitting(next);
+       }
+       //alignAvoids(areaBody.getStartFitting(m), trueEndFitting, avoids);
+
+       Map<Point, List<Point>> cutMap = getSubMap();
+       ret = planeGeo.subdivide(DwgPoint.class, areaBody.getStartFitting(m), trueEndFitting, maxPipe, sizes, avoids, margin, cutMap);
+       if(ret){
+	       for(Pipe sub : subs){
+	       	 List<Point> cuts = cutMap.get(areaBody.getStartFitting(sub));
+	       	 if(cuts != null){
+	       		PipeFitting subStart = areaBody.getStartFitting(sub);
+	       		PipeFitting subEnd = areaBody.getEndFitting(sub);
+	       		List<PipeFitting> breakups = areaBody.subdivideGraph(sub, cuts);
+	            updateBreakups(options, areaBody, sub, subStart, subEnd, breakups);
+	       	}
+	       }
+       }
+       logger.info("-subdivideOneGrooved->" + ret);
+       return ret;
+   }
+   */
+   private void updateBreakups(final AreaBody areaBody, final DrawingLayer layer, PipeAttachment startAttachment, PipeAttachment endAttachment, final PipeFitting start, final PipeFitting end, final List<PipeFitting> cuts){
+//logger.debug("+updateBreakups:" + oldPipe + " old takeouts-" + oldPipe.getStartAttachment().getTakeout()
+//		+ "," + oldPipe.getEndAttachment().getTakeout());
+	   if(logger.isDebugEnabled()){
+		   UndirectedGraph g = areaBody.getPipeGraph();
+		   logger.info("edges=" + g.edgeSet().size() + ",vertices=" + g.vertexSet().size());
+		   PipeFitting firstCut = cuts.get(0);
+		   logger.info("start=" + start + ",end=" + end + ",1stCut=" + firstCut);
+		   logger.info("Start=" + g.containsVertex(start) + ",End=" + g.containsVertex(end) + ",1stCut=" + g.containsVertex(firstCut)
+				   + ",start-1stCut=" + g.containsEdge(start, firstCut) + "end-1stCut=" + g.containsEdge(end, firstCut) + ",start-end="+g.containsEdge(start, end));
+				  
+	   }
+	   Pipe startPipe = areaBody.getPipeGraph().getEdge(start, cuts.get(0));
+       Pipe endPipe = areaBody.getPipeGraph().getEdge(end, cuts.get(cuts.size() - 1));
+       // transfer attachment info from old pipe
+       logger.info("startPipe=" + (startPipe!=null) );
+       startPipe.setStartAttachment(startAttachment);
+       endPipe.setEndAttachment(endAttachment);
+//	   List<Pipe> pipes = new ArrayList<Pipe>();
+//	   DrawingLayer layer = options.findLayer(oldPipe.getLayerName());
+//	   Vendor vendor = layer.getVendor();
+       Attachment attachment = null;
+       if(layer.getType() == Designation.Branch){
+    	   attachment =  Attachment.threaded;
+       }else{
+    	   attachment = layer.getSubType();
+    	   if(attachment == Attachment.welded){
+    		   attachment = Attachment.threaded;
+    	   }else if(attachment == Attachment.weldedGroove){
+    		   attachment = Attachment.grooved;
+    	   }
+       }
+       for(PipeFitting cut : cuts){
+    	   List<Pipe> pipes = getPipeList();
+    	   pipes.clear();
+    	   pipes.addAll(areaBody.getPipeGraph().edgesOf(cut));
+           setupOneFitting(areaBody, cut, Type.Coupling, attachment, null, pipes);
+       }
+//logger.debug("-updateBreakups: new start takeouts" + startPipe.getStartAttachment().getTakeout()
+//		+ "," + startPipe.getEndAttachment().getTakeout());
+//logger.debug("-updateBreakups: new end takeouts" + endPipe.getStartAttachment().getTakeout()
+//		+ "," + endPipe.getEndAttachment().getTakeout());
+   }
+
+	public PlaneGeo getPlaneGeo() {
+		return planeGeo;
+	}
+
+	public void setPlaneGeo(final PlaneGeo planeGeo) {
+		this.planeGeo = planeGeo;
+	}
+
+	public TakeoutRepository getTakeout() {
+		return takeout;
+	}
+
+	public void setTakeout(final TakeoutRepository takeout) {
+		this.takeout = takeout;
+	}
+	public Fitting.Factory getFittingFactory() {
+		return fittingFactory;
+	}
+	public void setFittingFactory(final Fitting.Factory fittingFactory) {
+		this.fittingFactory = fittingFactory;
+	}
+	public PipeConfig getPipeConfig() {
+		return pipeConfig;
+	}
+	public void setPipeConfig(PipeConfig pipeConfig) {
+		this.pipeConfig = pipeConfig;
+	}
+
+}

@@ -1,0 +1,38 @@
+<dwg:area-root xmlns:dwg="http://dwg.autopipes.org">
+<dwg-id xmlns="http://dwg.autopipes.org">341</dwg-id>
+<area-body xmlns="http://dwg.autopipes.org">
+<dwg-entity cls="AcDbBlockReference" id="1156" ly="sprk-pbl" name="AREA-CONFIG"><ent-start x="4769.81755291372" y="739.88989952406"/>
+<attributes>
+<entry xmlns=""><key>AREA-ID</key><value>2</value></entry>
+<entry xmlns=""><key>AREA-NAME</key><value>Area-2</value></entry>
+<entry xmlns=""><key>MAIN-LABEL</key><value>M-</value></entry>
+<entry xmlns=""><key>MAIN-START-NO</key><value>1</value></entry>
+<entry xmlns=""><key>BRANCH-LABEL</key><value>#</value></entry>
+<entry xmlns=""><key>BRANCH-START-NO</key><value>1</value></entry>
+<entry xmlns=""><key>IGNORE-SHORTER-THAN</key><value>1'</value></entry>
+<entry xmlns=""><key>CUT-LONGER-THAN</key><value>10'6"</value></entry>
+<entry xmlns=""><key>CUT-BRANCH-INTO</key><value>7'</value></entry>
+<entry xmlns=""><key>CUT-MAIN-INTO</key><value>10'6" 10' 9'</value></entry>
+<entry xmlns=""><key>MAIN-CUT-CLEARANCE</key><value>6"</value></entry>
+</attributes>
+</dwg-entity>
+<dwg-entity cls="AcDbPoint" id="1136" ly="sprk-pbl"><ent-start x="4979.83682915813" y="653.62316378425"/></dwg-entity>
+<dwg-entity cls="AcDbPoint" id="1137" ly="sprk-pbl"><ent-start x="4784.74238885348" y="562.619894036405"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="1135" ly="sprk-pmn"><ent-start x="4784.74238885348" y="653.62316378425"/><ent-end x="4979.83682915813" y="653.62316378425"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="1138" ly="sprk-pmn"><ent-start x="4784.74238885349" y="739.88989952406"/><ent-end x="4784.74238885348" y="562.619894036405"/></dwg-entity>
+<dwg-entity cls="AcDbLine" id="1139" ly="sprk-pmn"><ent-start x="4769.81755291372" y="739.88989952406"/><ent-end x="4784.74238885349" y="739.88989952406"/></dwg-entity>
+</area-body>
+<area-options xmlns="http://dwg.autopipes.org">
+<main-label>M-</main-label>
+<main-start-no>1</main-start-no>
+<branch-label>#</branch-label>
+<branch-start-no>1</branch-start-no>
+<ignore-shorter-than>1'</ignore-shorter-than>
+<cut-longer-than>10'6"</cut-longer-than>
+<cut-branch-into>7'</cut-branch-into>
+<cut-main-into>10'6" 10' 9'</cut-main-into>
+<main-cut-clearance>6"</main-cut-clearance>
+</area-options>
+<area-id xmlns="http://dwg.autopipes.org">2</area-id>
+<area-name xmlns="http://dwg.autopipes.org">Area-2</area-name>
+</dwg:area-root>
