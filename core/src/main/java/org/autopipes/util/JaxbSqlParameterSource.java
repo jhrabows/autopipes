@@ -68,4 +68,8 @@ public class JaxbSqlParameterSource implements SqlParameterSource {
 		return ms.getSqlType(paramName);
 	}
 
+	public String getTypeName(String paramName) {
+		return null;
+	}
+
 }
