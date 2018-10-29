@@ -6,6 +6,10 @@
   <artifactId>parent</artifactId>
   <version>3.0</version>
   <packaging>pom</packaging>
+  
+  <properties>
+  	<spring.version>2.5</spring.version>
+  </properties>
  
   <dependencyManagement>
     <dependencies>
@@ -84,13 +88,13 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
         <exclusions>
           <exclusion>
             <artifactId>servlet-api</artifactId>
@@ -108,44 +112,44 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-tx</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
       </dependency>
 
 
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-beans</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
       </dependency>
 
      <dependency>
        <groupId>org.springframework</groupId>
        <artifactId>spring-aop</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
      </dependency>
 
      <dependency>
        <groupId>org.springframework</groupId>
        <artifactId>spring-web</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
      </dependency>
 
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
-        <version>2.5</version>
+        <version>${spring.version}</version>
 
         <scope>test</scope>
 
