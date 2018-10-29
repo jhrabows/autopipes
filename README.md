@@ -13,13 +13,14 @@ The aim of this project is to automate steps 3-4 above. The project consists of
 # Build and deploy notes for developers
 Required tools are
 1. Java 10+
-2. Mavan 3.5.4+
+2. Maven 3.5.4+
 3. Tomcat 9.0.12+
-4. Oracle XE 11+
+4. Oracle XE 10+
 
 All installations are standard except for these
 1. Tomcat needs to run on port 9090 (to avoid conflict with Oracle XE)
 2. ojdbc14.jar needs to be copied manually from C:\oraclexe\app\oracle\product\10.2.0\server\jdbc\lib to Tomcat's lib
+3. Service expects an Oracle user with userid/password set to 'autopipes/autopipes'. The sql/oracle folder contains a batch script to create such a user. That script assumes that the system password (provided during installation of OracleXE) is 'autopipes'. If a different password is used, the script needs to be adjusted manually.
 
 Maven needs to know about
 1. Java version of the source/target.
@@ -28,4 +29,9 @@ Maven needs to know about
 This can be done by setting environment variable
 
 MAVEN_OPTS=-Dmaven.compiler.source=1.10 -Dmaven.compiler.target=1.10 -Dtomcat.deploy.dir=[path-to-tomcat-webapps]
+
+To build and deploy
+1. Unzip or clone this project in a location of your choice
+2. Run the following from the command line
+mvn clean install
 
