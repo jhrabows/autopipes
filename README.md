@@ -10,8 +10,22 @@ The aim of this project is to automate steps 3-4 above. The project consists of
 2. Web Service (Java) which receives details about the drawing from the VBA Macro, performs the necessary calculations and sends the resulting measures back to the Macro for display in the drawing
 3. Web Page which displays the cut-sheets
 
-# Build notes for developers
-This project was build with java 10 and mavan 3.5.4
-Maven needs to be told about java version of the source. This can be done by setting environment variable
+# Build and deploy notes for developers
+Required tools are
+1. Java 10+
+2. Mavan 3.5.4+
+3. Tomcat 9.0.12+
+4. Oracle XE 11+
 
-MAVEN_OPTS=-Dmaven.compiler.source=1.6 -Dmaven.compiler.target=1.6
+All installations are standard except for these
+1. Tomcat needs to run on port 9090 (to avoid conflict with Oracle XE)
+2. ojdbc14.jar needs to be copied manually from C:\oraclexe\app\oracle\product\10.2.0\server\jdbc\lib to Tomcat's lib
+
+Maven needs to know about
+1. Java version of the source/target.
+2. Location of Tomcat installation (for deploy)
+
+This can be done by setting environment variable
+
+MAVEN_OPTS=-Dmaven.compiler.source=1.10 -Dmaven.compiler.target=1.10 -Dtomcat.deploy.dir=[path-to-tomcat-webapps]
+
