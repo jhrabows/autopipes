@@ -26,6 +26,13 @@
                 <value>org.autopipes.takeout.TakeoutRepository</value>
             </list>
         </property>
+        <!-- 
+        <property name="packagesToScan">
+            <list>
+                <value>org.autopipes.takeout</value>
+            </list>
+        </property>
+         -->
         <property name="marshallerProperties">
             <map>
                 <entry key = "jaxb.formatted.output">

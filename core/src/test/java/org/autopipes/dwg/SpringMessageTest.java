@@ -1,8 +1,9 @@
 package org.autopipes.dwg;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+//import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
-public class SpringMessageTest  extends AbstractDependencyInjectionSpringContextTests{
+public class SpringMessageTest // extends AbstractDependencyInjectionSpringContextTests
+{
  /*
 	private static Logger logger = Logger.getLogger(SpringMessageTest.class);
 	private Marshaller jaxb2Marshaller;

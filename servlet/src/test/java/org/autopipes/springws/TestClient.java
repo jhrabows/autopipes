@@ -8,50 +8,53 @@ import javax.xml.transform.stream.StreamSource;
 import org.autopipes.model.DrawingArea;
 import org.autopipes.model.FloorDrawing;
 import org.autopipes.model.RenderDwg;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-public class TestClient  extends AbstractDependencyInjectionSpringContextTests{
-	@Override
-	protected String[] getConfigLocations() {
-	        return new String[]{"test-context.xml"};
-	    }
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:test-context.xml"})
+public class TestClient {
 
+	@Autowired
 	private Marshaller marshaller;
-
+	@Autowired
 	private FloorDrawing ocfgTest1;
+	@Autowired
 	private RenderDwg renTest2;
-
+	@Autowired
 	private Resource dwgTest2;
+	@Autowired
 	private DrawingArea odwgTest2;
-
+	@Autowired
 	private WebServiceTemplate webServiceTemplate;
 
-	public TestClient(){
-	    setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
-	}
-
+	@Test
 	public void testRendering() throws Exception{
         Object reply = webServiceTemplate.marshalSendAndReceive(renTest2);
         FloorDrawing status = (FloorDrawing)reply;
         Result out = new StreamResult(System.out);
         marshaller.marshal(status, out);
 	}
-
+	@Test
 	public void testLoadDrawing() throws Exception{
         Result out = new StreamResult(System.out);
         Source in = new StreamSource(dwgTest2.getInputStream());
 		webServiceTemplate.sendSourceAndReceiveToResult(in, out);
 	}
-
+	@Test
 	public void testLoadConfig1()throws Exception{
         Object reply = webServiceTemplate.marshalSendAndReceive(ocfgTest1);
         FloorDrawing status = (FloorDrawing)reply;
         Result out = new StreamResult(System.out);
         marshaller.marshal(status, out);
 	}
+	@Test
 	public void testLoadDrawingObj()throws Exception{
         Object reply = webServiceTemplate.marshalSendAndReceive(ocfgTest1);
         FloorDrawing cfgStatus = (FloorDrawing)reply;

@@ -11,36 +11,41 @@ import org.autopipes.model.DrawingArea;
 import org.autopipes.model.FloorDrawing;
 import org.autopipes.model.AreaCutSheet.CutSheetInfo;
 import org.autopipes.model.DrawingArea.Readiness;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+//import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
 
-public class StorageServiceTest  extends AbstractDependencyInjectionSpringContextTests{
+// specify the BeanConfigurationFiles to use for auto-wiring the properties of this class
+@RunWith(org.springframework.test.context.junit4.SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations= {"classpath:test-app-context.xml" /*, "classpath:test-pipe-context.xml" */})
+public class StorageServiceTest  {
     private static Logger logger = Logger.getLogger(StorageServiceTest.class);
+    @Autowired
 	private Marshaller jaxb2Marshaller;
+    @Autowired
 	private StorageService storageService;
+    @Autowired
 	private ReportingService reportingService;
+    @Autowired
 	private FloorDrawing cfgTest1;
+    @Autowired
     private DrawingArea dwgTest1;
 
-    public StorageServiceTest(){
-    	super();
-	    setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
-    }
-    // specify the BeanConfigurationFiles to use for auto-wiring the properties of this class
-	@Override
-	protected String[] getConfigLocations() {
-	        return new String[]{"test-app-context.xml", "test-pipe-context.xml"};
-	    }
-
+    @Test
 	public void testSpringSetup()throws Exception{
         Result res = new StreamResult(System.out);
-        assertNotNull(cfgTest1);
+        Assert.assertNotNull(cfgTest1);
         jaxb2Marshaller.marshal(cfgTest1, res);
-        assertNotNull(dwgTest1);
+        Assert.assertNotNull(dwgTest1);
         jaxb2Marshaller.marshal(dwgTest1, res);
 	}
-
+    
+    @Test
 	public void testQuery(){
 		List<FloorDrawing> drawings = storageService.findAllDrawings();
 		logger.info("Got " + drawings.size() + " drawings");
@@ -54,7 +59,8 @@ public class StorageServiceTest  extends AbstractDependencyInjectionSpringContex
 
 		}
 	}
-
+    
+    @Test
 	public void testQueryDrawing() throws Exception{
 		List<FloorDrawing> drawings = storageService.findAllDrawings();
 		logger.info("Got " + drawings.size() + " drawings");
@@ -65,12 +71,13 @@ public class StorageServiceTest  extends AbstractDependencyInjectionSpringContex
 		}
 	}
 
+    @Test
 	public void testQueryArea(){
 		Long id = storageService.findDrawingId(cfgTest1.getDwgName());
 		List<DrawingArea> areas = storageService.findDrawingAreas(id);
 		logger.info("Got " + areas.size() + " areas for drawing " + id);
 	}
-
+    @Test
 	public void testThreadedMainReport(){
 		
 		Long id = storageService.findDrawingId("Test-1-before");
@@ -97,7 +104,7 @@ public class StorageServiceTest  extends AbstractDependencyInjectionSpringContex
 		}
     }
 */
-	
+    @Test
 	public void testQueryOneArea() throws XmlMappingException, IOException{
 		Long id = storageService.findDrawingId(cfgTest1.getDwgName());
 		List<DrawingArea> areas = storageService.findDrawingAreas(id);
@@ -111,7 +118,8 @@ public class StorageServiceTest  extends AbstractDependencyInjectionSpringContex
 	        jaxb2Marshaller.marshal(areaDetail, new StreamResult(System.out));
 		}
 	}
-
+    
+    @Test
 	public void testInsertCfg() throws Exception{
 		Long id = storageService.findDrawingId(cfgTest1.getDwgName());
 		if(id != null){
@@ -119,9 +127,10 @@ public class StorageServiceTest  extends AbstractDependencyInjectionSpringContex
 		}
 		testUpdateCfg();
 	}
+    @Test
 	public void testInsertArea() throws Exception{
 		Long drawingId = storageService.findDrawingId(cfgTest1.getDwgName());
-		assertNotNull(drawingId);
+		Assert.assertNotNull(drawingId);
 		dwgTest1.setDrawingId(drawingId);
 		Long areaId = storageService.findAreaId(drawingId, dwgTest1.getAreaName());
 		if(areaId != null){
@@ -133,15 +142,17 @@ public class StorageServiceTest  extends AbstractDependencyInjectionSpringContex
 		logger.info("Inserting: dwg=" + drawingId);
 		storageService.mergeArea(dwgTest1);
 	}
+    @Test
 	public void testUpdateCfg() throws Exception{
 		storageService.mergeDrawing(cfgTest1);
 	}
+    @Test
 	public void testUpdateArea() throws Exception{
 		Long drawingId = storageService.findDrawingId(cfgTest1.getDwgName());
-		assertNotNull(drawingId);
+		Assert.assertNotNull(drawingId);
 		dwgTest1.setDrawingId(drawingId);
 		Long areaId = storageService.findAreaId(drawingId, dwgTest1.getAreaName());
-		assertNotNull(areaId);
+		Assert.assertNotNull(areaId);
 		dwgTest1.setAreaId(areaId);
         storageService.mergeArea(dwgTest1);
         logger.info("Updating dwg=" + drawingId);

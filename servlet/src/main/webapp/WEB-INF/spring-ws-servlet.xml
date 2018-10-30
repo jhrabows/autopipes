@@ -91,7 +91,7 @@
   
 <!-- Jaxb2 configuration: list of application classes -->
     <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="classesToBeBound">
+         <property name="classesToBeBound">
             <list>
                 <value>org.autopipes.takeout.TakeoutRepository</value>
                 <value>org.autopipes.model.FloorDrawing</value>
@@ -102,6 +102,14 @@
                 <value>org.autopipes.model.RenderDwg</value>
             </list>
         </property>
+        <!-- 
+        <property name="packagesToScan">
+            <list>
+                <value>org.autopipes.takeout</value>
+                <value>org.autopipes.model</value>
+            </list>
+        </property>
+         -->
         <property name="marshallerProperties">
             <map>
                 <entry key = "jaxb.formatted.output">
