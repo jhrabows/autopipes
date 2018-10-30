@@ -16,10 +16,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
 
-public class TakeoutTest extends TestCase {
+@RunWith(org.springframework.test.context.junit4.SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:test-context.xml")
+public class TakeoutTest {
+	
 	// Generates HTML page in TEST folder which shows serialized display of all diameters.
+	@Test
    public void testPage() throws Exception{
 	   Map<String, String> env = System.getenv();
 	   String tempPath = env.get("TEMP");
@@ -141,7 +148,7 @@ public class TakeoutTest extends TestCase {
 	   
 	   return ret;
    }
-
+   @Test
    public void testSerialization()throws Exception{
 		JAXBContext jaxbContext = JAXBContext.newInstance(
 				TakeoutInfo.class,
@@ -164,6 +171,7 @@ public class TakeoutTest extends TestCase {
 	    marshaller.marshal(ti, System.out);
 */
    }
+   @Test
    public void testFittingSerialization() throws JAXBException{
 	   
 		JAXBContext jaxbContext = JAXBContext.newInstance(
@@ -185,6 +193,7 @@ public class TakeoutTest extends TestCase {
        +"<diameter>D1</diameter><diameter>D2</diameter>"
    +"</ns2:fitting>";
    
+   @Test
    public void testFittingDeserialization() throws JAXBException, UnsupportedEncodingException{
 	   
 		JAXBContext jaxbContext = JAXBContext.newInstance(
@@ -194,14 +203,14 @@ public class TakeoutTest extends TestCase {
 		InputStream is = new ByteArrayInputStream(
 				TEST_FITTING.getBytes("UTF-8"));
 		Object f = unmarshaller.unmarshal(is);
-		assertNotNull(f);
-		assertTrue(f.getClass() == Fitting.class);
+		Assert.assertNotNull(f);
+		Assert.assertTrue(f.getClass() == Fitting.class);
 
 		Marshaller marshaller = jaxbContext.createMarshaller();
 
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 	    marshaller.marshal(f, System.out);
-		assertEquals(2, ((Fitting)f).getDiameterList().size());
+	    Assert.assertEquals(2, ((Fitting)f).getDiameterList().size());
   }
 }
