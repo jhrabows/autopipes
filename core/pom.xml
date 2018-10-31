@@ -85,7 +85,7 @@
 
     <dependency>
       <groupId>org.jgrapht</groupId>
-      <artifactId>jgrapht-jdk1.5</artifactId>
+      <artifactId>jgrapht-core</artifactId>
     </dependency>
    <!-- 
     

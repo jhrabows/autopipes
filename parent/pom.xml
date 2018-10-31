@@ -224,8 +224,8 @@
 
     <dependency>
       <groupId>org.jgrapht</groupId>
-      <artifactId>jgrapht-jdk1.5</artifactId>
-      <version>0.7.3</version>
+      <artifactId>jgrapht-core</artifactId>
+      <version>0.9.1</version>
     </dependency>
 
     </dependencies>

@@ -136,7 +136,7 @@ This class name needs to be listed in 1-line file WEB-INF/services/javax.xml.soa
 
     <dependency>
       <groupId>org.jgrapht</groupId>
-      <artifactId>jgrapht-jdk1.5</artifactId>
+      <artifactId>jgrapht-core</artifactId>
     </dependency>
  
     <dependency>
