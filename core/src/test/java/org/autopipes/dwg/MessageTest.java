@@ -1,8 +1,7 @@
 package org.autopipes.dwg;
 
-import junit.framework.TestCase;
 
-public class MessageTest extends TestCase {
+public class MessageTest {
 	/*
 	private Marshaller marshaller;
 	@Override

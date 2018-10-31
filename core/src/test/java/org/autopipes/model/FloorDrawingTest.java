@@ -22,11 +22,13 @@ import org.autopipes.takeout.Diameter;
 import org.autopipes.takeout.Fitting;
 import org.autopipes.takeout.TakeoutInfo;
 import org.autopipes.takeout.Vendor;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.autopipes.takeout.Fitting.Direction;
 
 
-public class FloorDrawingTest extends TestCase {
-	private Marshaller marshaller;
+public class FloorDrawingTest {
+	private static Marshaller marshaller;
 
 	private DwgEntity createCircle(){
 		DwgPoint center = new DwgPoint();
@@ -112,13 +114,14 @@ public class FloorDrawingTest extends TestCase {
     	options.getLayer().add(layer);
     	return ret;
     }
-
+    @Test
     public void testConfigSerialization() throws Exception{
 
     	FloorDrawing root = createFloorDrawing();
 		marshaller.marshal(root, System.out);
 
     }
+    @Test
     public void testAreaSerialization() throws Exception{
 
     	DrawingArea root = createDrawingArea();
@@ -166,17 +169,20 @@ public class FloorDrawingTest extends TestCase {
 		cs.preSerialize();
         return cs;
     }
+    @Test
     public void testTakeoutInfoSerialization() throws JAXBException{
     	TakeoutInfo ti = new TakeoutInfo();
     	ti.setMain(true);
 		marshaller.marshal(ti, System.out);
     }
+    @Test
     public void testRenderingSerialization() throws Exception{
 
     	RenderDwg root = createRenderDwg();
 		marshaller.marshal(root, System.out);
 
     }
+    @Test
     public void testFullSerialization() throws Exception{
 
     	FloorDrawing root = createFloorDrawing();
@@ -186,8 +192,8 @@ public class FloorDrawingTest extends TestCase {
 
     }
 
-    @Override
-	public void setUp() throws Exception{
+    @BeforeClass
+	public static void setUp() throws Exception{
 		JAXBContext jaxbContext = JAXBContext.newInstance(
 				Vendor.class,
 				DrawingArea.class,

@@ -23,8 +23,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { /*"/app-context-junit4.xml", "/spring-pipe.xml" */})
+@ContextConfiguration(locations = { "classpath:app-context-junit4.xml" , "classpath:spring-pipe.xml" })
 public final class SpringTest {
+	@Test
+	public void dummyTest() {
+		
+	}
 /*	
 	// injected services
 	@Autowired

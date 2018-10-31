@@ -19,6 +19,7 @@ public class SpringTest {
 	private TakeoutRepository root;
 
     @Test
+    // Testing deserialization of a test takeout repo which contains made-up data.
 	public void testSpringSetup(){
 		Assert.assertNotNull(root);
         logger.info(root);

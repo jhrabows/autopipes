@@ -137,7 +137,7 @@
 
 <!-- For takeoutrepo.xml assumes that WEB-INF is in classpath -->
   <bean id="takeoutRepo" factory-bean="sampleGenerator" factory-method="read" init-method="initLookup">
-    <constructor-arg value="takeoutrepo.xml"/>
+    <constructor-arg value="classpath:takeoutrepo.xml"/>
   </bean>
 
   <bean id="planeGeo" class="org.autopipes.util.PlaneGeo">

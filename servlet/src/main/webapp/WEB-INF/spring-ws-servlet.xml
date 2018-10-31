@@ -64,7 +64,7 @@
   </bean>
 
   <bean id="takeoutRepo" factory-bean="resourceReader" factory-method="read" init-method="initLookup">
-    <constructor-arg value="WEB-INF/takeoutrepo.xml"/>
+    <constructor-arg value="classpath:takeoutrepo.xml"/>
   </bean>
 
 <!-- Defines marshalling for service arguments -->

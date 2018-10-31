@@ -379,10 +379,12 @@ public class Fitting {
 				return false;
 			}
 		}
-		if(attachments.length != thatFitting.attachments.length){
+		int length = attachments != null ? attachments.length : 0,
+				thatLength = thatFitting.attachments != null ? thatFitting.attachments.length : 0;
+		if(length != thatLength){
 			return false;
 		}
-		for(int i = 0; i < attachments.length; i++){
+		for(int i = 0; i < length; i++){
 			Attachment a = attachments[i];
 			Attachment ta = thatFitting.attachments[i];
 			if(a == null){

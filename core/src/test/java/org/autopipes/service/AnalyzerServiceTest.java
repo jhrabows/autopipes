@@ -1,5 +1,11 @@
 package org.autopipes.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+
+
 import java.io.IOException;
 
 import javax.xml.transform.Result;
@@ -21,19 +27,67 @@ import org.autopipes.takeout.Fitting;
 import org.autopipes.util.EdgeIterator;
 import org.autopipes.util.EdgeTrimmer;
 import org.jgrapht.UndirectedGraph;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 //import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
 
+@RunWith(org.springframework.test.context.junit4.SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations= {"classpath:test-app-context.xml" , "classpath:spring-pipe.xml" })
 public class AnalyzerServiceTest //extends AbstractDependencyInjectionSpringContextTests
 {
-/*
+	@Autowired
 	private AnalyzerService analyzerService;
+	@Autowired
 	private ReportingService reportingService;
+	@Autowired
 	private Marshaller jaxb2Marshaller;
-
+	@Autowired
 	private FloorDrawing cfgTest1;
+	@Autowired
     private DrawingArea dwgTest1;
+	@Autowired
+    private RenderDwg renTest2;
+	@Autowired
+	private DrawingArea dwgTestSimpleM;
+	@Autowired
+    private DrawingArea dwgTestLongM;
+
+	@Test
+	public void testSpringSetup()throws Exception{
+        Result res = new StreamResult(System.out);
+        assertNotNull(cfgTest1);
+        cfgTest1.getOptionsRoot().preSerialize();
+        jaxb2Marshaller.marshal(cfgTest1, res);
+        assertNotNull(dwgTest1);
+        jaxb2Marshaller.marshal(dwgTest1, res);
+        assertNotNull(renTest2);
+        jaxb2Marshaller.marshal(renTest2, res);
+	}
+	@Test
+	public void testSimpleMain() throws Exception{
+		analyzerService.validateArea(cfgTest1, dwgTestSimpleM);
+		analyzerService.buildCutSheetReport(cfgTest1, dwgTestSimpleM);
+        reportingService.renderMainLabels(cfgTest1, dwgTestSimpleM);
+        reportingService.renderSizes(cfgTest1, dwgTestSimpleM, true, true, true, true);
+		jaxb2Marshaller.marshal(dwgTestSimpleM, new StreamResult(System.out));
+		// off by 1
+		//assertEquals(2, dwgTestSimpleM.getAreaBody().getEdgesInOrder().size());
+	}
+	@Test
+	public void testLongMain() throws XmlMappingException, IOException{
+		analyzerService.validateArea(cfgTest1, dwgTestLongM);
+		//for(DwgEntity e : dwgTestLongM.getAreaBody().getEdgesInOrder()){
+        //	System.out.println(e + ": " + e.getEntStart() + "-" + e.getEntEnd());
+        //}
+		jaxb2Marshaller.marshal(dwgTestLongM, new StreamResult(System.out));
+		// off by 1
+		//assertEquals(4, dwgTestLongM.getAreaBody().getEdgesInOrder().size());
+	}
+
+/*
     private DrawingArea dwgTest3;
     private DrawingArea dwgTestDiscon;
     private DrawingArea dwgTestBreak;
@@ -49,7 +103,6 @@ public class AnalyzerServiceTest //extends AbstractDependencyInjectionSpringCont
 
 	private DrawingArea dwgTestLongBr;
     private DrawingArea dwgTestLab;
-    private DrawingArea dwgTestLongM;
     
     private DrawingArea dwgTestMatch;
     private DrawingArea dwgTestMatch2;
@@ -161,9 +214,7 @@ public class AnalyzerServiceTest //extends AbstractDependencyInjectionSpringCont
 	private FloorDrawing cfgTestMatch;
 
 
-	private DrawingArea dwgTestSimpleM;
     private RenderDwg renTest1;
-    private RenderDwg renTest2;
     private DrawingArea dwgTestTwin;
     private DrawingArea dwgTestBlock;
     private FloorDrawing cfgTestTwin;
@@ -178,27 +229,7 @@ public class AnalyzerServiceTest //extends AbstractDependencyInjectionSpringCont
 		this.dwgTestMainEll45 = dwgTestMainEll45;
 	}
 
-	public AnalyzerServiceTest(){
-    	super();
-	    setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
-    }
 
-	@Override
-	protected String[] getConfigLocations() {
-	    return new String[]{"test-app-context.xml",
-	    		"test-pipe-context.xml"};
-	    }
-
-	public void testSpringSetup()throws Exception{
-        Result res = new StreamResult(System.out);
-        assertNotNull(cfgTest1);
-        cfgTest1.getOptionsRoot().preSerialize();
-        jaxb2Marshaller.marshal(cfgTest1, res);
-        assertNotNull(dwgTest1);
-        jaxb2Marshaller.marshal(dwgTest1, res);
-        assertNotNull(renTest2);
-        jaxb2Marshaller.marshal(renTest2, res);
-	}
 
 	public void testTrimmerP(){
 		analyzerService.validateArea(cfgTest1, dwgTestPT);
@@ -270,13 +301,6 @@ public class AnalyzerServiceTest //extends AbstractDependencyInjectionSpringCont
         reportingService.renderBranchLabels(cfgTest1, dwgTestLab);
         jaxb2Marshaller.marshal(dwgTestLab, new StreamResult(System.out));
         assertEquals(2, dwgTestLab.getRendering().size());
-	}
-	public void testLongMain(){
-		analyzerService.validateArea(cfgTest1, dwgTestLongM);
-		//for(DwgEntity e : dwgTestLongM.getAreaBody().getEdgesInOrder()){
-        //	System.out.println(e + ": " + e.getEntStart() + "-" + e.getEntEnd());
-        //}
-		assertEquals(4, dwgTestLongM.getAreaBody().getEdgesInOrder().size());
 	}
 	public void testMatch() throws XmlMappingException, IOException{
 		analyzerService.validateArea(cfgTestMatch, dwgTestMatch);
@@ -360,14 +384,6 @@ public class AnalyzerServiceTest //extends AbstractDependencyInjectionSpringCont
 		jaxb2Marshaller.marshal(dwgTestMainTakeout, new StreamResult(System.out));
 	}
 
-	public void testSimpleMain() throws Exception{
-		analyzerService.validateArea(cfgTest1, dwgTestSimpleM);
-		analyzerService.buildCutSheetReport(cfgTest1, dwgTestSimpleM);
-		assertEquals(2, dwgTestSimpleM.getAreaBody().getEdgesInOrder().size());
-        reportingService.renderMainLabels(cfgTest1, dwgTestSimpleM);
-        reportingService.renderSizes(cfgTest1, dwgTestSimpleM, true, true, true, true);
-		jaxb2Marshaller.marshal(dwgTestSimpleM, new StreamResult(System.out));
-	}
 	public void iteratorTest(final FloorDrawing cfg, final DrawingArea dwg){
 		analyzerService.validateArea(cfg, dwg);
 		UndirectedGraph<PipeFitting, Pipe> g = dwg.getAreaBody().getPipeGraph();

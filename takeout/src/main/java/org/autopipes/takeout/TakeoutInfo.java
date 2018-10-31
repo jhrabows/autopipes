@@ -85,6 +85,9 @@ public class TakeoutInfo {
 	 * @return the limit diameter
 	 */
 	public Diameter getDrillLimit(Attachment attachment) {
+		if(drillLimits == null) {
+			return null;
+		}
 		return drillLimits.get(attachment);
 	}
 	/*
