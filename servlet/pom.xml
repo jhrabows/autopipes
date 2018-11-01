@@ -41,9 +41,10 @@
                         <phase>install</phase>
                         <configuration>
                             <tasks>
+                            <echo message="ORACLE_HOME is set to = ${env.ORACLE_HOME}"/>
                                 <echo>***** Deploying ${project.build.directory}/${project.artifactId}-${project.version}.war to ${tomcat.deploy.dir} *****</echo>
                                 <copy file="${project.build.directory}/${project.artifactId}-${project.version}.war" 
-                                		tofile="${tomcat.deploy.dir}/${project.artifactId}.war" />
+                                		tofile="${tomcat.home.dir}/webapps/${project.artifactId}.war" />
                                  <echo>***** Done *****</echo>
                             </tasks>
                         </configuration>
@@ -72,6 +73,11 @@ This class name needs to be listed in 1-line file WEB-INF/services/javax.xml.soa
     <version>1.4.0</version>
 </dependency> 
   
+         <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+        </dependency>
+ 
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>

@@ -20,8 +20,9 @@
                 <configuration>
                   <skipTests>false</skipTests>
 		          <additionalClasspathElements>
-		          	<!-- Pulling Oracle Jdbc driver from outside of repository -->
+		          	<!-- Pulling Oracle Jdbc driver from outside of repository
 		            <additionalClasspathElement>/oraclexe/app/oracle/product/10.2.0/server/jdbc/lib/ojdbc14.jar</additionalClasspathElement>
+					 -->
 		          </additionalClasspathElements>
                 </configuration>
             </plugin>
@@ -47,6 +48,13 @@
 	    <groupId>javax.annotation</groupId>
 	    <artifactId>javax.annotation-api</artifactId>
 	</dependency>
+	
+	     <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <scope>test</scope>
+        </dependency>
+	
 
     <dependency>
       <groupId>org.autopipes</groupId>

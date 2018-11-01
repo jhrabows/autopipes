@@ -19,7 +19,10 @@ Required tools are
 
 All installations are standard except for these
 1. Tomcat needs to run on port 9090 (to avoid conflict with Oracle XE)
-2. ojdbc14.jar needs to be copied manually from C:\oraclexe\app\oracle\product\10.2.0\server\jdbc\lib to Tomcat's lib
+2. ojdbc14.jar needs to be installed in maven. Run installdriver script in sql/oracle folder. That script finds location of Oracle installation from an environment variable:
+
+DB_HOME=C:\oraclexe\app\oracle\product\10.2.0
+
 3. Service expects an Oracle user with userid/password set to 'autopipes/autopipes'. The sql/oracle folder contains a batch script to create such a user. That script assumes that the system password (provided during installation of OracleXE) is 'autopipes'. If a different password is used, the script needs to be adjusted manually.
 
 Maven needs to know about
@@ -28,7 +31,7 @@ Maven needs to know about
 
 This can be done by setting environment variable
 
-MAVEN_OPTS=-Dmaven.compiler.source=1.10 -Dmaven.compiler.target=1.10 -Dtomcat.deploy.dir=[path-to-tomcat-webapps]
+MAVEN_OPTS=-Dmaven.compiler.source=1.10 -Dmaven.compiler.target=1.10 -Dtomcat.home.dir=[path-to-tomcat-home]
 
 To build and deploy
 1. Unzip or clone this project in a location of your choice
