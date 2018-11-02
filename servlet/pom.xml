@@ -41,7 +41,6 @@
                         <phase>install</phase>
                         <configuration>
                             <tasks>
-                            <echo message="ORACLE_HOME is set to = ${env.ORACLE_HOME}"/>
                                 <echo>***** Deploying ${project.build.directory}/${project.artifactId}-${project.version}.war to ${tomcat.deploy.dir} *****</echo>
                                 <copy file="${project.build.directory}/${project.artifactId}-${project.version}.war" 
                                 		tofile="${tomcat.home.dir}/webapps/${project.artifactId}.war" />
@@ -120,12 +119,6 @@ This class name needs to be listed in 1-line file WEB-INF/services/javax.xml.soa
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>org.springframework.ws</groupId>
-      <artifactId>spring-ws-core-tiger</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>org.directwebremoting</groupId>
       <artifactId>dwr</artifactId>
@@ -149,13 +142,20 @@ This class name needs to be listed in 1-line file WEB-INF/services/javax.xml.soa
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
     </dependency>
-<!--         
-    <dependency>
-      <groupId>org.springframework.ws</groupId>
-      <artifactId>spring-oxm-tiger</artifactId>
-    </dependency>
+
+  		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-oxm</artifactId>
+		</dependency>
+     <dependency>
+	    <groupId>org.springframework.ws</groupId>
+	    <artifactId>spring-ws-core</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-webmvc</artifactId>
+	</dependency>
  
- -->
   </dependencies>
 </project>
    
