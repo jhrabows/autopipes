@@ -69,7 +69,7 @@ This class name needs to be listed in 1-line file WEB-INF/services/javax.xml.soa
 <dependency>
     <groupId>com.sun.xml.messaging.saaj</groupId>
     <artifactId>saaj-impl</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 </dependency> 
   
          <dependency>
