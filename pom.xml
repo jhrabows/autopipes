@@ -13,6 +13,7 @@
 		<module>takeout</module>
 		<module>core</module>
 		<module>servlet</module>
+		<module>soapserver</module>
 	</modules>
  
 </project>
