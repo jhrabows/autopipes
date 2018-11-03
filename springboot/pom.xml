@@ -11,17 +11,20 @@
 	<name>springboot</name>
 	<description>Demo project for Spring Boot</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+  <parent>
+    <artifactId>parent</artifactId>
+    <relativePath>../parent</relativePath>
+    <groupId>org.autopipes</groupId>
+    <version>3.0</version>
+  </parent>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>10</java.version>
+	    <maven.compiler.source>${java.version}</maven.compiler.source>
+	    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+<!-- The main class to start by executing java -jar -->
+        <start-class>org.autopipes.springboot.db.SpringbootApplication</start-class>
+		
 	</properties>
 
 	<dependencies>
@@ -30,7 +33,6 @@
 	<dependency>
 	    <groupId>javax.xml.bind</groupId>
 	    <artifactId>jaxb-api</artifactId>
-	    <version>2.3.0</version>
 	</dependency>
 
 		<dependency>
@@ -51,7 +53,7 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc7</artifactId>
-            <version>12.1.0</version>
+			<scope>runtime</scope>
         </dependency>
 		
 		<dependency>
@@ -59,16 +61,29 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+	      <groupId>org.autopipes</groupId>
+	      <artifactId>core</artifactId>
+	    </dependency>
+		
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

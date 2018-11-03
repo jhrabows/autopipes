@@ -2,11 +2,21 @@ package org.autopipes.model;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 	/**
@@ -18,28 +28,55 @@ import javax.xml.bind.annotation.XmlType;
 	 * The <code>area</code> is a SQL-transient attribute populated only in the
 	 * reply message to the AutoCAD client. It contains status summaries for the areas.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+
+// JAXB
+//	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = {})
 	@XmlRootElement(name = "dwg-root")
-    public class FloorDrawing {
+// JPA	
+	@Entity
+	@Table(name="floor_drawing_jpa", uniqueConstraints={@UniqueConstraint(columnNames = {"name"})})
+	public class FloorDrawing {
 
-		@XmlElement(name = "dwg-id")
+		@Id
+	    //http://www.oracle.com/technetwork/middleware/ias/id-generation-083058.html
+	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DWG_SEQ")
+	    @SequenceGenerator(sequenceName = "floor_seq_jpa", initialValue = 1, allocationSize = 1, name = "DWG_SEQ")
+		@Column(name = "id")
 	    protected Long id;
-	    @XmlElement(name = "dwg-name", required = true)
+		
+		@Column(name = "name")
 	    protected String dwgName;
-	    @XmlElement(name = "dwg-text-size")
+		
+		@Column(name = "text_size")
 	    protected Double dwgTextSize;
-	    @XmlElement(name = "dwg-update-date")
+		
+		@Column(name = "upd_date")
 	    protected Calendar dwgUpdateDate;
-	    @XmlElement(name = "options-root")
+		
+	    @Lob
+		@Column(name = "configuration")
+	    protected String optionsRootXml;	    
+	    @Transient
 	    protected DrawingOptions optionsRoot;
 
-	    protected HashMap<Long, DrawingArea> area;
+	    @Transient
+	    protected Map<Long, DrawingArea> area;
 
-	    public String getDwgName() {
+	    
+	    public String getOptionsRootXml() {
+			return optionsRootXml;
+		}
+	    @XmlTransient
+		public void setOptionsRootXml(String optionsRootXml) {
+			this.optionsRootXml = optionsRootXml;
+		}
+
+		public String getDwgName() {
 	        return dwgName;
 	    }
 
+	    @XmlElement(name = "dwg-name", required = true)
 	    public void setDwgName(final String value) {
 	        dwgName = value;
 	    }
@@ -48,6 +85,7 @@ import javax.xml.bind.annotation.XmlType;
 	        return dwgTextSize;
 	    }
 
+	    @XmlElement(name = "dwg-text-size")
 	    public void setDwgTextSize(final Double value) {
 	        dwgTextSize = value;
 	    }
@@ -55,7 +93,8 @@ import javax.xml.bind.annotation.XmlType;
 	    public Calendar getDwgUpdateDate() {
 	        return dwgUpdateDate;
 	    }
-
+	    
+	    @XmlElement(name = "dwg-update-date")
 	    public void setDwgUpdateDate(final Calendar value) {
 	        dwgUpdateDate = value;
 	    }
@@ -64,6 +103,7 @@ import javax.xml.bind.annotation.XmlType;
 			return id;
 		}
 
+		@XmlElement(name = "dwg-id")
 		public void setId(final Long id) {
 			this.id = id;
 		}
@@ -72,11 +112,13 @@ import javax.xml.bind.annotation.XmlType;
 			return optionsRoot;
 		}
 
+	    @XmlElement(name = "options-root")
 		public void setOptionsRoot(final DrawingOptions optionsRoot) {
 			this.optionsRoot = optionsRoot;
 		}
 
-		public HashMap<Long, DrawingArea> getArea() {
+	    @XmlElement(name = "area")
+		public Map<Long, DrawingArea> getArea() {
 	        if (area == null) {
 	        	area = new HashMap<Long, DrawingArea>();
 	        }
