@@ -2,14 +2,18 @@ package org.autopipes.model;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -20,9 +24,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 	/**
-	 * Jaxb bean which contains information which applies to the entire drawing.
-	 * It is used in passing messages between AuoCAD client and the Autopipes servlet.
-	 * The content of this bean is persisted in a database table but only some attributes
+	 * Bean which contains information which applies to the entire drawing.
+	 * JAXB-annotated for passing messages between AuoCAD client and the Autopipes servlet.
+	 * JPA-annotated for persistence in a database table but only some attributes
 	 * may be queried individually - others are serialized into XML and saved in
 	 * a single CLOB attribute (optionsRoot).
 	 * The <code>area</code> is a SQL-transient attribute populated only in the
@@ -37,6 +41,7 @@ import javax.xml.bind.annotation.XmlType;
 	@Entity
 	@Table(name="floor_drawing_jpa", uniqueConstraints={@UniqueConstraint(columnNames = {"name"})})
 	public class FloorDrawing {
+		private static final int CLOB_MAX = 10000;
 
 		@Id
 	    //http://www.oracle.com/technetwork/middleware/ias/id-generation-083058.html
@@ -54,14 +59,20 @@ import javax.xml.bind.annotation.XmlType;
 		@Column(name = "upd_date")
 	    protected Calendar dwgUpdateDate;
 		
+		// TODO: remove optionsRootXml and write a JPA type converter similar to one in templated version
 	    @Lob
-		@Column(name = "configuration")
+		@Column(name = "configuration", length = CLOB_MAX )
 	    protected String optionsRootXml;	    
 	    @Transient
 	    protected DrawingOptions optionsRoot;
 
 	    @Transient
 	    protected Map<Long, DrawingArea> area;
+
+	    // used only to define foreign key
+		@OneToMany(cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
+		@JoinColumn(name="drawing_id", referencedColumnName="id")
+		private List<DrawingArea> areas;
 
 	    
 	    public String getOptionsRootXml() {
