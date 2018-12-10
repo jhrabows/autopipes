@@ -66,8 +66,8 @@
 			<!-- Fake Oracle location (installed locally from file) -->
 			<dependency>
 				<groupId>com.oracle</groupId>
-				<artifactId>ojdbc7</artifactId>
-				<version>12.1.0</version>
+				<artifactId>ojdbc6</artifactId>
+				<version>11.2.0</version>
 			</dependency>
 			
 		<!-- javax -->

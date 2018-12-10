@@ -4,7 +4,8 @@ REM That location can be overwritten by setting DB_HOME environment variable.
 REM Note that setting ORACLE_HOME breaks XE.
 
 if not "%DB_HOME%"=="" goto install
-set DB_HOME=C:\oraclexe\app\oracle\product\10.2.0
+REM set DB_HOME=C:\oraclexe\app\oracle\product\10.2.0
+set DB_HOME=C:\app\%USERNAME%\product\11.2.0\dbhome_1
 	
 :install
-mvn install:install-file -Dfile=%DB_HOME%\server\jdbc\lib\ojdbc14.jar -DgroupId=com.oracle -DartifactId=ojdbc7 -Dversion=12.1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=%DB_HOME%\jdbc\lib\ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
