@@ -1,0 +1,64 @@
+//@import '~shared-grid/GenericGrid.scss';
+//@import '~shared-grid/darkly/GenericGrid.scss';
+
+
+//@import '~ppthemes/bulma/variables';
+@import '~font-awesome/scss/font-awesome.scss';
+//@import "~ppthemes/darklybulma/variables";
+@import "~bulma/bulma";
+//@import "~ppthemes/darklybulma/overrides";
+
+.field-domain-name{
+	.button.is-static{
+		padding-right: 4px;
+		border-right: none;
+		background-color: #1a1a1a;
+        border-color: #4e4e4e;
+        color: #c7c7c7;
+	}
+	input{
+		padding-left: 0;
+		border-left: none;
+	}
+}
+
+.grid-cell {
+	    line-height: 20px;
+}
+
+.grid-header-row {
+    line-height: 30px;
+}
+
+.new-account-modal {
+	.modal-card{
+		min-height: 500px;
+		min-width: 1200px;
+	}
+	.panel-title{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		
+		label{
+			margin-bottom: 0;
+		}
+	}
+	.currentAccount{
+		padding-left: 20px;
+		.currentAccountHeader{
+			line-height: 30px;
+			background-color: #1f2e44;
+			padding: 0 0.5rem;
+			 .select{
+				float: right;
+				margin-top:3px;
+			}
+		}
+		.field {
+			margin-bottom: 0.5rem;
+			margin-left: 0.5rem;
+		}
+	}
+}

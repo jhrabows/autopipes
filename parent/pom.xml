@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<java.version>10</java.version>
+		<java.version>8</java.version>
 		<spring.version>5.1.2.RELEASE</spring.version>
 		<spring-boot.version>2.1.0.RELEASE</spring-boot.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -216,6 +216,42 @@
 						<!-- this is necessary as we're not using the Boot parent -->
 					</configuration>
 				</plugin>
+				<plugin>
+				   <groupId>org.codehaus.mojo</groupId>
+				   <artifactId>exec-maven-plugin</artifactId>
+				   <version>1.6.0</version>
+				   <executions>
+						<execution>
+							<id>exec-npm-install</id>
+							<phase>generate-sources</phase>
+							<configuration>
+								<executable>npm</executable>
+								<arguments>
+								  <argument>install</argument>
+								</arguments>
+							</configuration>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+						</execution>
+						
+						<execution>
+							<id>exec-npm-build</id>
+							<phase>compile</phase>
+							<configuration>
+								<executable>npm</executable>
+								<arguments>
+								  <argument>run</argument>
+								  <argument>build</argument>
+								</arguments>
+							</configuration>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+						</execution>
+
+				   </executions>
+				</plugin>			
 			</plugins>
 		</pluginManagement>
 	</build>

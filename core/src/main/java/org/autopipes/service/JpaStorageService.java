@@ -34,8 +34,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Qualifier("JpaStorageService")
+@Service("JpaStorageService")
 @Scope(proxyMode = ScopedProxyMode.INTERFACES)
 public class JpaStorageService implements StorageService {
 	

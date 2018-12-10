@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages = { "org.autopipes.service", "org.autopipes.server.config" })
+@SpringBootApplication(scanBasePackages = { "org.autopipes.service", "org.autopipes.server.config", "org.autopipes.server.controller" })
 @EntityScan( basePackages = {"org.autopipes.model"} )
-@ComponentScan(basePackages = {"org.autopipes.service", "org.autopipes.server.config"})
+@ComponentScan(basePackages = {"org.autopipes.service", "org.autopipes.server.config", "org.autopipes.server.controller"})
 @EnableJpaRepositories("org.autopipes.service")
 public class AutopipesServerApplication {
 

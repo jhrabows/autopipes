@@ -23,6 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 	/**
 	 * Bean which contains information which applies to the entire drawing.
 	 * JAXB-annotated for passing messages between AuoCAD client and the Autopipes servlet.
@@ -39,7 +41,7 @@ import javax.xml.bind.annotation.XmlType;
 	@XmlRootElement(name = "dwg-root")
 // JPA	
 	@Entity
-	@Table(name="floor_drawing_jpa", uniqueConstraints={@UniqueConstraint(columnNames = {"name"})})
+	@Table(name="floor_drawing", uniqueConstraints={@UniqueConstraint(columnNames = {"name"})})
 	public class FloorDrawing {
 		private static final int CLOB_MAX = 10000;
 
@@ -74,7 +76,8 @@ import javax.xml.bind.annotation.XmlType;
 		@JoinColumn(name="drawing_id", referencedColumnName="id")
 		private List<DrawingArea> areas;
 
-	    
+		// hide storage xml-string from clients
+		@JsonIgnore
 	    public String getOptionsRootXml() {
 			return optionsRootXml;
 		}

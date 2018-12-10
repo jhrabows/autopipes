@@ -28,6 +28,8 @@ import org.autopipes.model.AreaCutSheet.CutSheetInfo;
 import org.autopipes.model.AreaCutSheet.EdgeMultiplicity;
 import org.autopipes.model.DrawingLayer.Designation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Jaxb bean which contains information about an area within a drawing.
  * It contains searchable attributes, area-level configuration XML
@@ -42,7 +44,7 @@ import org.autopipes.model.DrawingLayer.Designation;
 @XmlRootElement(name = "area-root")
 // JPA
 @Entity
-@Table(name="floor_area_jpa", uniqueConstraints={@UniqueConstraint(columnNames = {"drawing_id", "area_name"})})
+@Table(name="floor_area", uniqueConstraints={@UniqueConstraint(columnNames = {"drawing_id", "area_name"})})
 public class DrawingArea {
 	private static Logger logger = Logger.getLogger(DrawingArea.class);
 	private static final int CLOB_MAX = 100000;
@@ -333,6 +335,7 @@ public class DrawingArea {
 	public void setAreaCutSheet(AreaCutSheet areaCutSheet) {
 		this.areaCutSheet = areaCutSheet;
 	}
+    @JsonIgnore
 	public String getAreaOptionsXml() {
 		return areaOptionsXml;
 	}
@@ -340,6 +343,7 @@ public class DrawingArea {
 	public void setAreaOptionsXml(String areaOptionsXml) {
 		this.areaOptionsXml = areaOptionsXml;
 	}
+	@JsonIgnore
 	public String getAreaBodyXml() {
 		return areaBodyXml;
 	}
@@ -347,6 +351,7 @@ public class DrawingArea {
 	public void setAreaBodyXml(String areaBodyXml) {
 		this.areaBodyXml = areaBodyXml;
 	}
+	@JsonIgnore
 	public String getAreaCutSheetXml() {
 		return areaCutSheetXml;
 	}
