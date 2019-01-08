@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.List;
 
 import javax.xml.transform.Source;
@@ -90,12 +89,13 @@ public class StorageJpaServiceTest {
     	assertNotNull(dwg1Res);
     	FloorDrawing cfg1 = (FloorDrawing) unmarshalResource(cfg1Res);
     	service.mergeDrawing(cfg1);
-    	Long id = cfg1.getId();
-    	FloorDrawing cfg1Dwg = service.findOneDrawing(id);
+    	Long dwgId = cfg1.getId();
+    	FloorDrawing cfg1Dwg = service.findOneDrawing(dwgId);
         jaxb2Marshaller.marshal(cfg1Dwg, new StreamResult(System.out));
         DrawingArea dwg1 = (DrawingArea) unmarshalResource(dwg1Res);
+        dwg1.setDrawingId(dwgId);
         service.mergeArea(dwg1);
-        List<DrawingArea> areas = service.findDrawingAreas(id);
+        List<DrawingArea> areas = service.findDrawingAreas(dwgId);
         assertTrue(areas.size() > 0);
      }
 

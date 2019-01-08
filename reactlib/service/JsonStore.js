@@ -2,8 +2,9 @@
 // designed to work with React components.
 // Conceptually it is a Class which wraps an Object array (like RequestMemory)
 // and implements REST calls to manage array data.
-// REST calls use GET/POST with actual Verb encoded in the HTTP header.
-// This class also keeps track of states that active REST requests are currently in
+// In cases when only GET/POST is supported one can use those and encode actual Verb in the HTTP header.
+// This class also keeps track of states that active REST requests are currently in.
+// This class assumes that fetch API is supported (read no IE) but one can overwrite low level methods to use jQuery, axios, e.t.c.
 // 
 import axios from 'axios';
 import {STATUS, OPERATION} from './Constants.js';

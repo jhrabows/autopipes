@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,7 +73,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 	    protected Map<Long, DrawingArea> area;
 
 	    // used only to define foreign key
-		@OneToMany(cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
+		@OneToMany(fetch=FetchType.LAZY /*, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true */)
 		@JoinColumn(name="drawing_id", referencedColumnName="id")
 		private List<DrawingArea> areas;
 

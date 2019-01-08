@@ -153,7 +153,7 @@ public class JpaStorageService implements StorageService {
 
 	public Long findDrawingId(String name) {
 		Long ret = null;
-		FloorDrawing dwg = drawingRepository.findByDwgName(name);
+		FloorDrawing dwg = drawingRepository.findByDwgName(name).orElse(null);
 		if(dwg != null) {
 			ret = dwg.getId();
 		}
@@ -161,24 +161,32 @@ public class JpaStorageService implements StorageService {
 	}
 
 	@Transactional
-	public void mergeDrawing(FloorDrawing dwg) throws Exception {
+	public void mergeDrawing(final FloorDrawing dwg) throws Exception {
 		Long id = dwg.getId();
+		String name = dwg.getDwgName();
+		FloorDrawing testDwg = null;
 		if(id != null) {
 			// check if that id is still present
-			FloorDrawing testDwg = drawingRepository.findById(id).orElse(null);
-			if(testDwg == null) {
-				id = null;
-			}
+			testDwg = drawingRepository.findById(id).orElse(null);
 		}
-		if(id == null) {
-			id = findDrawingId(dwg.getDwgName());
+		if(testDwg == null) {
+			testDwg = drawingRepository.findByDwgName(name).orElse(null);
 		}
-		dwg.setId(id);
 		updateDrawingForStorage(dwg);
-		FloorDrawing savedDwg = drawingRepository.save(dwg);
-		if(id== null){
-			dwg.setId(savedDwg.getId());
+		FloorDrawing savedDwg = null;
+		if(testDwg != null) {
+			// In this case save(dwg) would trigger cascading update of areas.
+			// Hence we need to this (lame) object merge.
+			testDwg.setOptionsRootXml(dwg.getOptionsRootXml());
+			testDwg.setDwgName(name);
+			testDwg.setDwgTextSize(dwg.getDwgTextSize());
+			testDwg.setDwgUpdateDate(dwg.getDwgUpdateDate());
+			savedDwg = drawingRepository.save(testDwg);
+		}else {
+			savedDwg = drawingRepository.save(dwg);
 		}
+		// make sure id is correct
+		dwg.setId(savedDwg.getId());
 	}
 
 	@Transactional

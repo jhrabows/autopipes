@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:area-root xmlns:ns2="http://dwg.autopipes.org">
-    <ns2:dwg-id>1</ns2:dwg-id>
+    <ns2:area-id>1</ns2:area-id>
     <ns2:area-name>area-1</ns2:area-name>
     <ns2:area-options>
         <ns2:main-start-no>20</ns2:main-start-no>

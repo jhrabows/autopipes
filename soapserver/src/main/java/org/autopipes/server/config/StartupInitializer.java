@@ -56,12 +56,15 @@ public class StartupInitializer {
     public void handleContextRefresh(ContextRefreshedEvent event) {
     	logger.info("Initializing static drawings");
     	try{
+    		// Drawing will be identified by the name and id will be assigned.
+    		// Area ids are assumed to be consecutive numbers starting with 1.
          	FloorDrawing cfg1 = (FloorDrawing) unmarshalResource(cfg1Res);
         	service.mergeDrawing(cfg1);
-        	Long id = cfg1.getId();
-        	FloorDrawing cfg1Dwg = service.findOneDrawing(id);
+        	Long drawingId = cfg1.getId();
+        	FloorDrawing cfg1Dwg = service.findOneDrawing(drawingId);
             jaxb2Marshaller.marshal(cfg1Dwg, new StreamResult(System.out));
             DrawingArea dwg1 = (DrawingArea) unmarshalResource(dwg1Res);
+            dwg1.setDrawingId(drawingId);
             service.mergeArea(dwg1);
      	}catch(Exception e){
     		logger.error("Failed to initialize static drawings", e);
